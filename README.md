@@ -3,12 +3,12 @@
   <img src="docs/logo.svg" width="7.5%" />
 </p> -->
 
-# ZLSplit
-![pluginval](<https://github.com/ZL-Audio/ZLSplit/actions/workflows/cmake_full_test.yml/badge.svg?branch=main>)
+# ZLWarm
+![pluginval](<https://github.com/ZL-Audio/ZLWarm/actions/workflows/cmake_full_test.yml/badge.svg?branch=main>)
 
-ZLSplit is a splitting plugin.
+ZLWarm is a distortion/saturation plugin.
 
-<!-- <img src="Docs/screenshot.png" width=94%> -->
+<!-- <img src="docs/screenshot.png" width=94%> -->
 
 ## Usage
 
@@ -34,4 +34,4 @@ See the releases for the latest version.
 
 ## License
 
-ZLSplit is licensed under GPLv3, as found in the [LICENSE](LICENSE) file.
+ZLWarm is licensed under GPLv3, as found in the [LICENSE](LICENSE) file.
