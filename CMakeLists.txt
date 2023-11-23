@@ -125,7 +125,9 @@ target_compile_definitions(SharedCode
 
         # JucePlugin_Name is for some reason doesn't use the nicer PRODUCT_NAME
         PRODUCT_NAME_WITHOUT_VERSION="${PRODUCT_NAME}"
-        )
+        JUCE_DISPLAY_SPLASH_SCREEN=0
+        JUCE_COREGRAPHICS_RENDER_WITH_MULTIPLE_PAINT_CALLS=1
+        JUCE_SILENCE_XCODE_15_LINKER_WARNING=1)
 
 # Link to any other modules you added (with juce_add_module) here!
 # Usually JUCE modules must have PRIVATE visibility

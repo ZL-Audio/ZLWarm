@@ -1,36 +1,73 @@
+/*
+==============================================================================
+Copyright (C) 2023 - zsliu98
+This file is part of ZLInflator
+
+ZLInflator is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ZLInflator is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with ZLInflator. If not, see <https://www.gnu.org/licenses/>.
+==============================================================================
+*/
+
 #include "PluginEditor.h"
+#include <BinaryData.h>
 
-PluginEditor::PluginEditor(PluginProcessor &p)
-    : AudioProcessorEditor(&p), processorRef(p) {
-  juce::ignoreUnused(processorRef);
+//==============================================================================
+PluginEditor::PluginEditor(PluginProcessor &p) :
+        AudioProcessorEditor(&p), processorRef(p),
+        property(p.states),
+        mainPanel(p, p.getInputMeterSource(), p.getOutputMeterSource()) {
 
-  addAndMakeVisible(inspectButton);
+    for (auto &ID: IDs) {
+        processorRef.states.addParameterListener(ID, this);
+    }
+    // set font
+    auto sourceCodePro = juce::Typeface::createSystemTypefaceFor(BinaryData::OpenSansSemiBold_ttf,
+                                                                 BinaryData::OpenSansSemiBold_ttfSize);
+    juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypeface(sourceCodePro);
 
-  // Make sure that before the constructor has finished, you've set the
-  // editor's size to whatever you need it to be.
-  setSize(400, 300);
+    // add main panel
+    addAndMakeVisible(mainPanel);
+
+    // set size & size listener
+    setResizeLimits(zlstate::windowW::minV, zlstate::windowH::minV, zlstate::windowW::maxV, zlstate::windowH::maxV);
+    getConstrainer()->setFixedAspectRatio(
+            static_cast<float>(zlstate::windowW::defaultV) / static_cast<float>(zlstate::windowH::defaultV));
+    setResizable(true, p.wrapperType != PluginProcessor::wrapperType_AudioUnitv3);
+    lastUIWidth.referTo(p.states.getParameterAsValue(zlstate::windowW::ID));
+    lastUIHeight.referTo(p.states.getParameterAsValue(zlstate::windowH::ID));
+    setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
+    lastUIWidth.addListener(this);
+    lastUIHeight.addListener(this);
 }
 
-PluginEditor::~PluginEditor() {}
+PluginEditor::~PluginEditor() {
+    for (auto &ID: IDs) {
+        processorRef.states.removeParameterListener(ID, this);
+    }
+}
 
+//==============================================================================
 void PluginEditor::paint(juce::Graphics &g) {
-  // (Our component is opaque, so we must completely fill the background with a
-  // solid colour)
-  g.fillAll(
-      getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
-
-  auto area = getLocalBounds();
-  g.setColour(juce::Colours::white);
-  g.setFont(16.0f);
-  auto helloWorld = juce::String("Hello from ") + PRODUCT_NAME_WITHOUT_VERSION +
-                    " v" VERSION + " running in " + CMAKE_BUILD_TYPE;
-  g.drawText(helloWorld, area.removeFromTop(150), juce::Justification::centred,
-             false);
+    juce::ignoreUnused(g);
 }
 
 void PluginEditor::resized() {
-  // layout the positions of your child components here
-  auto area = getLocalBounds();
-  area.removeFromBottom(50);
-  inspectButton.setBounds(getLocalBounds().withSizeKeepingCentre(100, 50));
+    mainPanel.setBounds(getLocalBounds());
+    lastUIWidth = getWidth();
+    lastUIHeight = getHeight();
+}
+
+void PluginEditor::valueChanged(juce::Value &) {
+    setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
+}
+
+void PluginEditor::parameterChanged(const juce::String &parameterID, float newValue) {
+    juce::ignoreUnused(parameterID, newValue);
+    triggerAsyncUpdate();
+}
+
+void PluginEditor::handleAsyncUpdate() {
+    property.saveAPVTS(processorRef.states);
 }
