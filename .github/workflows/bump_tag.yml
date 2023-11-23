@@ -17,4 +17,4 @@ jobs:
       env:
         DEFAULT_BUMP: patch
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
-        WITH_V: true
+        WITH_V: false
