@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 #include "../GUI/combobox_component.h"
 #include "../GUI/button_component.h"
+#include "../GUI/linear_slider_component.h"
 #include "logo_panel.h"
 #include "panel_definitions.h"
 #include <BinaryData.h>
@@ -33,8 +34,12 @@ public:
     void resized() override;
 
 private:
-    std::unique_ptr<zlinterface::ButtonComponent> effectButton, splitButton;
-    std::array<std::unique_ptr<zlinterface::ButtonComponent> *, 2> buttonList{&effectButton, &splitButton};
+    std::unique_ptr<zlinterface::LinearSliderComponent> wetSlider;
+    std::array<std::unique_ptr<zlinterface::LinearSliderComponent> *, 1> sliderList{&wetSlider};
+    juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments;
+
+    std::unique_ptr<zlinterface::ButtonComponent> splitButton;
+    std::array<std::unique_ptr<zlinterface::ButtonComponent> *, 1> buttonList{&splitButton};
     juce::OwnedArray<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAttachments;
 
     std::unique_ptr<zlinterface::ComboboxComponent> sampleRateCombobox;
@@ -42,7 +47,6 @@ private:
     juce::OwnedArray<juce::AudioProcessorValueTreeState::ComboBoxAttachment> comboboxAttachments;
 
     zlinterface::UIBase *uiBase;
-    zlpanel::LogoPanel logoPanel;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TopPanel)
 };
 

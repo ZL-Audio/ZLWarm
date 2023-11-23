@@ -13,16 +13,17 @@ You should have received a copy of the GNU General Public License along with ZLI
 #include "top_panel.h"
 
 TopPanel::TopPanel(PluginProcessor &p,
-                   zlinterface::UIBase &base) :
-        logoPanel(p, base) {
+                   zlinterface::UIBase &base) {
     uiBase = &base;
+    // init sliders
+    std::array<std::string, 1> sliderID{zldsp::wet::ID};
+    zlpanel::attachSliders(*this, sliderList, sliderAttachments, sliderID, p.parameters, base);
     // init buttons
-    std::array<std::string, 2> buttonID{zldsp::effectIn::ID, zldsp::bandSplit::ID};
+    std::array<std::string, 1> buttonID{zldsp::bandSplit::ID};
     zlpanel::attachButtons(*this, buttonList, buttonAttachments, buttonID, p.parameters, base);
     // init combobox
     std::array<std::string, 1> comboboxID{"over_sample"};
     zlpanel::attachBoxes(*this, comboBoxList, comboboxAttachments, comboboxID, p.parameters, base);
-    addAndMakeVisible(logoPanel);
 }
 
 TopPanel::~TopPanel() = default;
@@ -38,7 +39,7 @@ void TopPanel::resized() {
     grid.templateColumns = {Track(Fr(1)), Track(Fr(1)), Track(Fr(1))};
 
     juce::Array<juce::GridItem> items;
-    items.add(*effectButton);
+    items.add(*wetSlider);
     items.add(*splitButton);
     items.add(*sampleRateCombobox);
 
