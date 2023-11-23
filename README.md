@@ -8,7 +8,7 @@
 
 ZLWarm is a distortion/saturation plugin.
 
-<!-- <img src="docs/screenshot.png" width=94%> -->
+<img src="docs/screenshot.png" width=51.87%>
 
 ## Usage
 
