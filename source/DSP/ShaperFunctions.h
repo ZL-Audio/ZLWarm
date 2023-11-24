@@ -47,13 +47,16 @@ namespace shaper {
     class CubicShaper : public Shaper<FloatType> {
     public:
         void setParameters(FloatType curve) override {
-            a = curve;
+            a = FloatType(-0.5) * curve + FloatType(1.85);
+            b = 2 * curve + FloatType(-4.6);
+            c = FloatType(-2.5) * curve + FloatType(2.7);
+            d = curve + 1;
         }
 
     private:
-        FloatType a;
+        FloatType a, b, c, d;
 
-        FloatType basic(FloatType x) const override { return a * x * (1 + x * (1 - x)) + (1 - a) * x; }
+        FloatType basic(FloatType x) const override { return x * (d + x * (c + x * (b + a * x))); }
 
         FloatType shape(FloatType x) const override { return basic(x); }
     };
@@ -62,16 +65,16 @@ namespace shaper {
     class QuarticShaper : public Shaper<FloatType> {
     public:
         void setParameters(FloatType curve) override {
-            curve = -6 + 6 * curve;
-            a = (4 + curve) / 2;
-            b = -5 - curve;
-            c = (6 + curve) / 2;
+            a = FloatType(0.25) * (curve - 1);
+            b = FloatType(0.5) * (curve - 1);
+            c = FloatType(0.75) - FloatType(1.75) * curve;
+            d = curve + 1;
         }
 
     private:
-        FloatType a, b, c;
+        FloatType a, b, c, d;
 
-        FloatType basic(FloatType x) const override { return x * (1 + x * (c + x * (b + a * x))); }
+        FloatType basic(FloatType x) const override { return x * (d + x * (c + x * (b + a * x))); }
 
         FloatType shape(FloatType x) const override { return basic(x); }
     };
@@ -114,7 +117,8 @@ namespace shaper {
         float warm = zldsp::warm::formatV(zldsp::warm::defaultV);
 
         FloatType shape(FloatType x) const {
-            return (x > 0 ? (*pShaper)(std::abs(x)) : warm * (*nShaper)(std::abs(x)) + (1 - warm) * (*pShaper)(std::abs(x)));
+            return (x > 0 ? (*pShaper)(std::abs(x)) : warm * (*nShaper)(std::abs(x)) +
+                                                      (1 - warm) * (*pShaper)(std::abs(x)));
         }
     };
 } // namespace shaper

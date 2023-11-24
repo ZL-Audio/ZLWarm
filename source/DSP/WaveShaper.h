@@ -57,7 +57,7 @@ private:
     }
 
     FloatType shape(FloatType x) const {
-        return shaperMixer(juce::jmin(static_cast<FloatType>(1), x)) * m_wet * sgn(x) + x * m_dry;
+        return shaperMixer(juce::jlimit(static_cast<FloatType>(-1), static_cast<FloatType>(1), x)) * m_wet * sgn(x) + x * m_dry;
     }
 };
 
