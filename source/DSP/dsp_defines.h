@@ -64,7 +64,7 @@ namespace zldsp {
         auto static constexpr ID = "curve";
         auto static constexpr name = "Curve (%)";
         inline auto static const range = juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f);
-        auto static constexpr defaultV = 25.0f;
+        auto static constexpr defaultV = 50.0f;
         static float formatV(float v) {
             return v / 100.f;
         }
@@ -75,7 +75,7 @@ namespace zldsp {
         auto static constexpr ID = "warm";
         auto static constexpr name = "Warm (%)";
         inline auto static const range = juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f);
-        auto static constexpr defaultV = 25.0f;
+        auto static constexpr defaultV = 0.0f;
         static float formatV(float v) {
             return v / 100.f;
         }
