@@ -50,16 +50,17 @@ namespace shaper {
 //            a = FloatType(-0.5) * curve + FloatType(1.85);
 //            b = 2 * curve + FloatType(-4.6);
 //            c = FloatType(-2.5) * curve + FloatType(2.7);
-            d = curve + 1;
             a = FloatType(1.35);
             b = FloatType(-3.35) + FloatType(0.75) * curve;
             c = FloatType(1.95) - FloatType(1.75) * curve;
+            d = curve + 1;
+            auto_compensate = 1 / (FloatType(0.75) * curve + 1);
         }
 
     private:
-        FloatType a, b, c, d;
+        FloatType a, b, c, d, auto_compensate;
 
-        FloatType basic(FloatType x) const override { return x * (d + x * (c + x * (b + a * x))); }
+        FloatType basic(FloatType x) const override { return auto_compensate * x * (d + x * (c + x * (b + a * x))); }
 
         FloatType shape(FloatType x) const override { return basic(x); }
     };
@@ -72,12 +73,13 @@ namespace shaper {
             b = FloatType(0.5) * (curve - 1);
             c = FloatType(0.75) - FloatType(1.75) * curve;
             d = curve + 1;
+            auto_compensate = 1 / (FloatType(0.75) * curve + 1);
         }
 
     private:
-        FloatType a, b, c, d;
+        FloatType a, b, c, d, auto_compensate;
 
-        FloatType basic(FloatType x) const override { return x * (d + x * (c + x * (b + a * x))); }
+        FloatType basic(FloatType x) const override { return auto_compensate * x * (d + x * (c + x * (b + a * x))); }
 
         FloatType shape(FloatType x) const override { return basic(x); }
     };
