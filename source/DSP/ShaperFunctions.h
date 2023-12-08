@@ -47,14 +47,11 @@ namespace shaper {
     class CubicShaper : public Shaper<FloatType> {
     public:
         void setParameters(FloatType curve) override {
-//            a = FloatType(-0.5) * curve + FloatType(1.85);
-//            b = 2 * curve + FloatType(-4.6);
-//            c = FloatType(-2.5) * curve + FloatType(2.7);
             a = FloatType(1.35);
             b = FloatType(-3.35) + FloatType(0.75) * curve;
             c = FloatType(1.95) - FloatType(1.75) * curve;
             d = curve + 1;
-            auto_compensate = 1 / (FloatType(0.75) * curve + 1);
+            auto_compensate = 1 / (FloatType(0.5625) * curve + FloatType(1.125));
         }
 
     private:
@@ -73,7 +70,7 @@ namespace shaper {
             b = FloatType(0.5) * (curve - 1);
             c = FloatType(0.75) - FloatType(1.75) * curve;
             d = curve + 1;
-            auto_compensate = 1 / (FloatType(0.75) * curve + 1);
+            auto_compensate = 1 / (FloatType(0.5625) * curve + FloatType(1.125));
         }
 
     private:
