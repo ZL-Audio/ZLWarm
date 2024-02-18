@@ -8,17 +8,17 @@
 // You should have received a copy of the GNU General Public License along with ZLEComp. If not, see <https://www.gnu.org/licenses/>.
 // ==============================================================================
 
-#ifndef ZL_BUTTON_LOOK_AND_FEEL_H
-#define ZL_BUTTON_LOOK_AND_FEEL_H
+#ifndef ZL_REGULAR_BUTTON_LOOK_AND_FEEL_H
+#define ZL_REGULAR_BUTTON_LOOK_AND_FEEL_H
 
+#include <juce_gui_basics/juce_gui_basics.h>
 
-#include "interface_definitions.h"
-#include "juce_gui_basics/juce_gui_basics.h"
+#include "../../interface_definitions.hpp"
 
-namespace zlinterface {
-    class ButtonLookAndFeel : public juce::LookAndFeel_V4 {
+namespace zlInterface {
+    class RegularButtonLookAndFeel : public juce::LookAndFeel_V4 {
     public:
-        explicit ButtonLookAndFeel(UIBase &base) {
+        explicit RegularButtonLookAndFeel(UIBase &base) {
             uiBase = &base;
         }
 
@@ -70,9 +70,7 @@ namespace zlinterface {
                 }
             }
         }
-        void setEditable(bool f) {
-            editable.store(f);
-        }
+        inline void setEditable(const bool f) { editable.store(f); }
 
     private:
         std::atomic<bool> editable = true;
@@ -80,4 +78,4 @@ namespace zlinterface {
         UIBase *uiBase;
     };
 }
-#endif //ZL_BUTTON_LOOK_AND_FEEL_H
+#endif //ZL_REGULAR_BUTTON_LOOK_AND_FEEL_H

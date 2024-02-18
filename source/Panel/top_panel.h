@@ -13,18 +13,16 @@ You should have received a copy of the GNU General Public License along with ZLI
 #ifndef ZLINFLATOR_TOPPANEL_H
 #define ZLINFLATOR_TOPPANEL_H
 
-#include "../GUI/combobox_component.h"
-#include "../GUI/button_component.h"
-#include "../GUI/linear_slider_component.h"
-#include "logo_panel.h"
-#include "panel_definitions.h"
 #include <BinaryData.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
-class TopPanel : public juce::Component {
+#include "../gui/gui.hpp"
+#include "logo_panel.h"
+#include "panel_definitions.h"
+
+class TopPanel final : public juce::Component {
 public:
-    explicit TopPanel(PluginProcessor &p,
-                      zlinterface::UIBase &base);
+    explicit TopPanel(PluginProcessor &p, zlInterface::UIBase &base);
 
     ~TopPanel() override;
 
@@ -34,19 +32,20 @@ public:
     void resized() override;
 
 private:
-    std::unique_ptr<zlinterface::LinearSliderComponent> wetSlider;
-    std::array<std::unique_ptr<zlinterface::LinearSliderComponent> *, 1> sliderList{&wetSlider};
+    zlInterface::UIBase &uiBase;
+
+    zlInterface::CompactLinearSlider wetS;
     juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments;
 
-    std::unique_ptr<zlinterface::ButtonComponent> splitButton;
-    std::array<std::unique_ptr<zlinterface::ButtonComponent> *, 1> buttonList{&splitButton};
+    zlInterface::CompactButton bypassC, bandSplitC;
     juce::OwnedArray<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAttachments;
 
-    std::unique_ptr<zlinterface::ComboboxComponent> sampleRateCombobox;
-    std::array<std::unique_ptr<zlinterface::ComboboxComponent> *, 1> comboBoxList{&sampleRateCombobox};
+    zlInterface::CompactCombobox oversampleC;
     juce::OwnedArray<juce::AudioProcessorValueTreeState::ComboBoxAttachment> comboboxAttachments;
+    juce::Label oversampleL;
+    zlInterface::NameLookAndFeel nameLAF;
 
-    zlinterface::UIBase *uiBase;
+    const std::unique_ptr<juce::Drawable> bypassDrawable, splitDrawable;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TopPanel)
 };
 

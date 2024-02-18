@@ -39,7 +39,7 @@ namespace zlstate {
         static std::unique_ptr<juce::AudioParameterFloat> get(bool automate = true) {
             auto attributes = juce::AudioParameterFloatAttributes().withAutomatable(automate).withLabel(T::name);
             return std::make_unique<juce::AudioParameterFloat>(juce::ParameterID(T::ID, versionHint), T::name,
-                                                             T::range, T::defaultV, attributes);
+                                                               T::range, T::defaultV, attributes);
         }
 
         inline static float convertTo01(float x) {
@@ -47,7 +47,8 @@ namespace zlstate {
         }
     };
 
-    class uiStyle : public FloatParameters<uiStyle> {public:
+    class uiStyle : public FloatParameters<uiStyle> {
+    public:
         auto static constexpr ID = "ui_style";
         auto static constexpr name = "NA";
         inline static const int minV = 0;
@@ -61,9 +62,9 @@ namespace zlstate {
     public:
         auto static constexpr ID = "window_w";
         auto static constexpr name = "NA";
-        inline static const int minV = 199;
-        inline static const int maxV = 1990;
-        inline static const int defaultV = 282;
+        inline static const int minV = 280;
+        inline static const int maxV = 2800;
+        inline static const int defaultV = 280;
         inline auto static const range =
                 juce::NormalisableRange<float>(minV, maxV, 1.f);
     };
@@ -72,9 +73,9 @@ namespace zlstate {
     public:
         auto static constexpr ID = "window_h";
         auto static constexpr name = "NA";
-        inline static const int minV = 150;
-        inline static const int maxV = 1500;
-        inline static const int defaultV = 213;
+        inline static const int minV = 180;
+        inline static const int maxV = 1800;
+        inline static const int defaultV = 180;
         inline auto static const range =
                 juce::NormalisableRange<float>(minV, maxV, 1.f);
     };
@@ -103,13 +104,13 @@ namespace zlstate {
         static std::unique_ptr<juce::AudioParameterChoice> get(bool automate = true) {
             auto attributes = juce::AudioParameterChoiceAttributes().withAutomatable(automate).withLabel(T::name);
             return std::make_unique<juce::AudioParameterChoice>(
-                    juce::ParameterID(T::ID, versionHint), T::name, T::choices, T::defaultI, attributes);
+                juce::ParameterID(T::ID, versionHint), T::name, T::choices, T::defaultI, attributes);
         }
 
         static std::unique_ptr<juce::AudioParameterChoice> get(juce::String label, bool automate = true) {
             auto attributes = juce::AudioParameterChoiceAttributes().withAutomatable(automate).withLabel(label);
             return std::make_unique<juce::AudioParameterChoice>(
-                    juce::ParameterID(T::ID, versionHint), T::name, T::choices, T::defaultI, attributes);
+                juce::ParameterID(T::ID, versionHint), T::name, T::choices, T::defaultI, attributes);
         }
     };
 

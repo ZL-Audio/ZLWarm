@@ -18,11 +18,12 @@ MainPanel::MainPanel(PluginProcessor &p,
         uiBase(),
         controlPanel(p.parameters, uiBase),
         topPanel(p, uiBase),
-        meterPanel(input, output, uiBase),
+        // meterPanel(input, output, uiBase),
         logoPanel(p, uiBase) {
     addAndMakeVisible(controlPanel);
     addAndMakeVisible(topPanel);
-    addAndMakeVisible(meterPanel);
+    // addAndMakeVisible(meterPanel);
+    logoPanel.setJustification(juce::Justification::centredLeft);
     addAndMakeVisible(logoPanel);
 }
 
@@ -38,9 +39,9 @@ void MainPanel::paint(juce::Graphics &g) {
 
 void MainPanel::resized() {
     auto bound = getLocalBounds().toFloat();
-    auto fontSize = bound.getHeight() * 0.048f;
-    bound = zlinterface::getRoundedShadowRectangleArea(bound, fontSize * 0.5f, {});
-    bound = zlinterface::getRoundedShadowRectangleArea(bound, fontSize * 0.5f, {});
+    auto fontSize = bound.getWidth() * 0.033838297872340425f;
+    bound = zlInterface::UIBase::getRoundedShadowRectangleArea(bound, fontSize * 0.5f, {});
+    bound = zlInterface::UIBase::getRoundedShadowRectangleArea(bound, fontSize * 0.5f, {});
 
     uiBase.setFontSize(fontSize);
 
@@ -48,12 +49,12 @@ void MainPanel::resized() {
     using Track = juce::Grid::TrackInfo;
     using Fr = juce::Grid::Fr;
 
-    grid.templateRows = {Track(Fr(3)), Track(Fr(12))};
+    grid.templateRows = {Track(Fr(11)), Track(Fr(48))};
     grid.templateColumns = {Track(Fr(6)), Track(Fr(15))};
 
     grid.items = {
             juce::GridItem(logoPanel).withArea(1, 1, 2, 2),
-            juce::GridItem(meterPanel).withArea(2, 1, 3, 2),
+            // juce::GridItem(meterPanel).withArea(2, 1, 3, 2),
             juce::GridItem(topPanel).withArea(1, 2, 2, 3),
             juce::GridItem(controlPanel).withArea(2, 2, 3, 3),
     };

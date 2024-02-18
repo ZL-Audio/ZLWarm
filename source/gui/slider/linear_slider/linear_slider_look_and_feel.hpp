@@ -11,10 +11,11 @@
 #ifndef ZL_LINEAR_SLIDER_LOOK_AND_FEEL_H
 #define ZL_LINEAR_SLIDER_LOOK_AND_FEEL_H
 
-#include "interface_definitions.h"
-#include "juce_gui_basics/juce_gui_basics.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
-namespace zlinterface {
+#include "../../interface_definitions.hpp"
+
+namespace zlInterface {
     class LinearSliderLookAndFeel : public juce::LookAndFeel_V4 {
     public:
         explicit LinearSliderLookAndFeel(UIBase &base) {

@@ -12,12 +12,12 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 #pragma once
 
-#include "DSP/dsp_defines.h"
-#include "DSP/MeterSource.h"
-#include "DSP/WaveShaper.h"
-#include "GUI/interface_definitions.h"
-#include "State/dummy_processor.h"
-#include "State/state_definitions.h"
+#include "dsp/dsp_defines.h"
+#include "dsp/MeterSource.h"
+#include "dsp/WaveShaper.h"
+#include "gui/gui.hpp"
+#include "state/dummy_processor.h"
+#include "state/state_definitions.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
 
@@ -97,7 +97,6 @@ public:
     shaper::ShaperMixer<float> *getShaperMixer();
 
     void parameterChanged(const juce::String &parameterID, float newValue) override;
-
 
 private:
     //==============================================================================

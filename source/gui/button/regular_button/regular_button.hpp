@@ -8,37 +8,29 @@
 // You should have received a copy of the GNU General Public License along with ZLEComp. If not, see <https://www.gnu.org/licenses/>.
 // ==============================================================================
 
-#ifndef ZL_LINEAR_SLIDER_COMPONENT_H
-#define ZL_LINEAR_SLIDER_COMPONENT_H
+#ifndef ZL_REGULAR_BUTTON_COMPONENT_H
+#define ZL_REGULAR_BUTTON_COMPONENT_H
 
-#include "name_look_and_feel.h"
-#include "linear_slider_look_and_feel.h"
-#include "interface_definitions.h"
-#include "juce_gui_basics/juce_gui_basics.h"
+#include "regular_button_look_and_feel.hpp"
+#include "../../label/name_look_and_feel.hpp"
 
-namespace zlinterface {
-    class LinearSliderComponent : public juce::Component {
+namespace zlInterface {
+    class RegularButton : public juce::Component {
     public:
-        explicit LinearSliderComponent(const juce::String &labelText, UIBase &base) :
+        explicit RegularButton(const juce::String &labelText, UIBase &base) :
                 myLookAndFeel(base), nameLookAndFeel(base) {
             uiBase = &base;
-            // setup slider
-            slider.setSliderStyle(juce::Slider::LinearHorizontal);
-            slider.setTextBoxIsEditable(false);
-            slider.setDoubleClickReturnValue(true, 0.0);
-            slider.setLookAndFeel(&myLookAndFeel);
-            slider.setScrollWheelEnabled(true);
-//            slider.setPopupDisplayEnabled(true, true, nullptr);
-            addAndMakeVisible(slider);
 
-            // setup label
+            button.setClickingTogglesState(true);
+            button.setLookAndFeel(&myLookAndFeel);
+            addAndMakeVisible(button);
             label.setText(labelText, juce::dontSendNotification);
             label.setLookAndFeel(&nameLookAndFeel);
             addAndMakeVisible(label);
         }
 
-        ~LinearSliderComponent() override {
-            slider.setLookAndFeel(nullptr);
+        ~RegularButton() override {
+            button.setLookAndFeel(nullptr);
             label.setLookAndFeel(nullptr);
         }
 
@@ -46,35 +38,34 @@ namespace zlinterface {
             auto bound = getLocalBounds().toFloat();
             auto labelBound = bound.removeFromTop(labelHeight * bound.getHeight());
             label.setBounds(labelBound.toNearestInt());
-            bound = bound.withSizeKeepingCentre(bound.getWidth(), bound.getWidth() * sliderRatio);
-            slider.setBounds(bound.toNearestInt());
+            button.setBounds(bound.toNearestInt());
         }
 
         void paint(juce::Graphics &g) override {
             juce::ignoreUnused(g);
         }
 
-        juce::Slider &getSlider() { return slider; }
+        juce::ToggleButton &getButton() { return button; }
 
         juce::Label &getLabel() { return label; }
 
-        void setEditable(bool f) {
+        void setEditable(const bool f) {
             myLookAndFeel.setEditable(f);
             nameLookAndFeel.setEditable(f);
         }
 
     private:
-        LinearSliderLookAndFeel myLookAndFeel;
+        RegularButtonLookAndFeel myLookAndFeel;
         NameLookAndFeel nameLookAndFeel;
-        juce::Slider slider;
+        juce::ToggleButton button;
         juce::Label label;
 
-        constexpr static float sliderHeight = 0.7f;
-        constexpr static float labelHeight = 1.f - sliderHeight;
-        constexpr static float sliderRatio = 0.45f;
+        constexpr static float buttonHeight = 0.7f;
+        constexpr static float labelHeight = 1.f - buttonHeight;
+        constexpr static float buttonRatio = 0.45f;
 
         UIBase *uiBase;
     };
 }
 
-#endif //ZL_LINEAR_SLIDER_COMPONENT_H
+#endif //ZL_REGULAR_BUTTON_COMPONENT_H

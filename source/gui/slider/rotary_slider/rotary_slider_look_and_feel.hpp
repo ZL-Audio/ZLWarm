@@ -11,10 +11,11 @@
 #ifndef ZL_ROTARY_SLIDER_LOOK_AND_FEEL_H
 #define ZL_ROTARY_SLIDER_LOOK_AND_FEEL_H
 
-#include "interface_definitions.h"
-#include "juce_gui_basics/juce_gui_basics.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
-namespace zlinterface {
+#include "../../interface_definitions.hpp"
+
+namespace zlInterface {
     class RotarySliderLookAndFeel : public juce::LookAndFeel_V4 {
     public:
         explicit RotarySliderLookAndFeel(UIBase &base) {
@@ -32,21 +33,21 @@ namespace zlinterface {
             // draw knob
             auto oldBounds = uiBase->drawInnerShadowEllipse(g, bounds, uiBase->getFontSize() * 0.5f, {});
             auto newBounds = uiBase->drawShadowEllipse(g, oldBounds, uiBase->getFontSize() * 0.5f, {});
-            uiBase->drawInnerShadowEllipse(g, newBounds, uiBase->getFontSize() * 0.15f, {.flip=true});
+            uiBase->drawInnerShadowEllipse(g, newBounds, uiBase->getFontSize() * 0.15f, {.flip = true});
             // draw arrow
             auto arrowUnit = (diameter - newBounds.getWidth()) * 0.5f;
             auto arrowBound = juce::Rectangle<float>(
-                    -0.5f * arrowUnit + bounds.getCentreX() +
-                    (0.5f * diameter - 0.5f * arrowUnit) * std::sin(rotationAngle),
-                    -0.5f * arrowUnit + bounds.getCentreY() +
-                    (0.5f * diameter - 0.5f * arrowUnit) * (-std::cos(rotationAngle)),
-                    arrowUnit, arrowUnit);
+                -0.5f * arrowUnit + bounds.getCentreX() +
+                (0.5f * diameter - 0.5f * arrowUnit) * std::sin(rotationAngle),
+                -0.5f * arrowUnit + bounds.getCentreY() +
+                (0.5f * diameter - 0.5f * arrowUnit) * (-std::cos(rotationAngle)),
+                arrowUnit, arrowUnit);
             auto arrowStartBound = juce::Rectangle<float>(
-                    -0.5f * arrowUnit + bounds.getCentreX() +
-                    (0.5f * diameter - 0.5f * arrowUnit) * std::sin(rotaryStartAngle),
-                    -0.5f * arrowUnit + bounds.getCentreY() +
-                    (0.5f * diameter - 0.5f * arrowUnit) * (-std::cos(rotaryStartAngle)),
-                    arrowUnit, arrowUnit);
+                -0.5f * arrowUnit + bounds.getCentreX() +
+                (0.5f * diameter - 0.5f * arrowUnit) * std::sin(rotaryStartAngle),
+                -0.5f * arrowUnit + bounds.getCentreY() +
+                (0.5f * diameter - 0.5f * arrowUnit) * (-std::cos(rotaryStartAngle)),
+                arrowUnit, arrowUnit);
             juce::Path mask;
             mask.addEllipse(bounds);
             mask.setUsingNonZeroWinding(false);
@@ -54,9 +55,14 @@ namespace zlinterface {
             g.saveState();
             g.reduceClipRegion(mask);
             uiBase->drawShadowEllipse(g, arrowBound, uiBase->getFontSize() * 0.5f,
-                                      {.fit=false, .drawBright=false, .drawDark=true});
+                                      {.fit = false, .drawBright = false, .drawDark = true});
             uiBase->drawShadowEllipse(g, arrowStartBound, uiBase->getFontSize() * 0.5f,
-                                      {.fit=false, .drawBright=false, .drawDark=true, .mainColour=TextHideColor});
+                                      {
+                                          .fit = false, .drawBright = false, .drawDark = true,
+                                          .mainColour = uiBase->getBackgroundColor().withAlpha(
+                                              uiBase->getTextColor().getAlpha()),
+                                          .changeMain = true
+                                      });
 
             juce::Path filling;
             filling.addPieSegment(bounds, rotaryStartAngle, rotationAngle, 0);
@@ -65,7 +71,7 @@ namespace zlinterface {
                                   0);
             g.setColour(uiBase->getTextHideColor());
             g.fillPath(filling);
-            uiBase->drawInnerShadowEllipse(g, arrowBound, uiBase->getFontSize() * 0.15f, {.flip=true});
+            uiBase->drawInnerShadowEllipse(g, arrowBound, uiBase->getFontSize() * 0.15f, {.flip = true});
             g.restoreState();
         }
 

@@ -8,33 +8,31 @@
 // You should have received a copy of the GNU General Public License along with ZLEComp. If not, see <https://www.gnu.org/licenses/>.
 // ==============================================================================
 
-#ifndef ZL_BUTTON_COMPONENT_H
-#define ZL_BUTTON_COMPONENT_H
+#ifndef ZL_REGULAR_COMBOBOX_COMPONENT_H
+#define ZL_REGULAR_COMBOBOX_COMPONENT_H
 
-#include "button_look_and_feel.h"
-#include "name_look_and_feel.h"
-#include "interface_definitions.h"
-#include "juce_gui_basics/juce_gui_basics.h"
+#include "regular_combobox_look_and_feel.hpp"
+#include "../../label/name_look_and_feel.hpp"
 
-namespace zlinterface {
-    class ButtonComponent : public juce::Component {
+namespace zlInterface {
+    class RegularCombobox : public juce::Component {
     public:
-        explicit ButtonComponent(const juce::String &labelText, UIBase &base) :
+        explicit RegularCombobox(const juce::String &labelText, const juce::StringArray &choices, UIBase &base) :
                 myLookAndFeel(base), nameLookAndFeel(base) {
             uiBase = &base;
-
-            setLookAndFeel(&myLookAndFeel);
-            button.setClickingTogglesState(true);
-            button.setLookAndFeel(&myLookAndFeel);
-            addAndMakeVisible(button);
+            comboBox.addItemList(choices, 1);
+            comboBox.setLookAndFeel(&myLookAndFeel);
+            comboBox.setScrollWheelEnabled(false);
+            addAndMakeVisible(comboBox);
             label.setText(labelText, juce::dontSendNotification);
             label.setLookAndFeel(&nameLookAndFeel);
             addAndMakeVisible(label);
+
+            uiBase = &base;
         }
 
-        ~ButtonComponent() override {
-            setLookAndFeel(nullptr);
-            button.setLookAndFeel(nullptr);
+        ~RegularCombobox() override {
+            comboBox.setLookAndFeel(nullptr);
             label.setLookAndFeel(nullptr);
         }
 
@@ -42,14 +40,14 @@ namespace zlinterface {
             auto bound = getLocalBounds().toFloat();
             auto labelBound = bound.removeFromTop(labelHeight * bound.getHeight());
             label.setBounds(labelBound.toNearestInt());
-            button.setBounds(bound.toNearestInt());
+            comboBox.setBounds(bound.toNearestInt());
         }
 
         void paint(juce::Graphics &g) override {
             juce::ignoreUnused(g);
         }
 
-        juce::ToggleButton &getButton() { return button; }
+        juce::ComboBox &getComboBox() { return comboBox; }
 
         juce::Label &getLabel() { return label; }
 
@@ -59,17 +57,16 @@ namespace zlinterface {
         }
 
     private:
-        ButtonLookAndFeel myLookAndFeel;
+        RegularComboboxLookAndFeel myLookAndFeel;
         NameLookAndFeel nameLookAndFeel;
-        juce::ToggleButton button;
+        juce::ComboBox comboBox;
         juce::Label label;
 
-        constexpr static float buttonHeight = 0.7f;
-        constexpr static float labelHeight = 1.f - buttonHeight;
-        constexpr static float buttonRatio = 0.45f;
+        constexpr static float boxHeight = 0.7f;
+        constexpr static float labelHeight = 1.f - boxHeight;
+        constexpr static float boxRatio = 0.45f;
 
         UIBase *uiBase;
     };
 }
-
-#endif //ZL_BUTTON_COMPONENT_H
+#endif //ZL_REGULAR_COMBOBOX_COMPONENT_H

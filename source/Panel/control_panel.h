@@ -13,17 +13,15 @@ You should have received a copy of the GNU General Public License along with ZLI
 #ifndef ZLINFLATOR_CONTROLPANEL_H
 #define ZLINFLATOR_CONTROLPANEL_H
 
-#include "../GUI/button_component.h"
-#include "../GUI/rotary_slider_component.h"
-#include "../GUI/combobox_component.h"
-#include "../DSP/dsp_defines.h"
+#include "../gui/gui.hpp"
+#include "../dsp/dsp_defines.h"
 #include "panel_definitions.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
 class ControlPanel : public juce::Component, public juce::AudioProcessorValueTreeState::Listener,
                      private juce::AsyncUpdater {
 public:
-    explicit ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlinterface::UIBase &base);
+    explicit ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlInterface::UIBase &base);
 
     ~ControlPanel() override;
 
@@ -35,24 +33,20 @@ public:
     void parameterChanged(const juce::String &parameterID, float newValue) override;
 
 private:
-    std::unique_ptr<zlinterface::RotarySliderComponent> inputGainSlider, outputGainSlider;
-    std::unique_ptr<zlinterface::RotarySliderComponent> lowSplitSlider, highSplitSlider, warmSlider, curveSlider;
-    std::array<std::unique_ptr<zlinterface::RotarySliderComponent> *, 6> rotarySliderList{&inputGainSlider,
-                                                                                          &outputGainSlider,
-                                                                                          &lowSplitSlider,
-                                                                                          &highSplitSlider,
-                                                                                          &warmSlider,
-                                                                                          &curveSlider};
+    juce::AudioProcessorValueTreeState &parametersRef;
+    zlInterface::UIBase &uiBase;
+
+    zlInterface::TwoValueRotarySlider inputGainSlider, outputGainSlider, lowSplitSlider;
+    zlInterface::TwoValueRotarySlider highSplitSlider, warmSlider, curveSlider;
     juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments;
 
-    juce::AudioProcessorValueTreeState *parameters;
     std::array<juce::String, 1> visibleChangeIDs = {zldsp::bandSplit::ID};
 
     void handleAsyncUpdate() override;
 
     void handleParameterChanges(const juce::String &parameterID, float newValue);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlPanel)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ControlPanel)
 };
 
 #endif //ZLINFLATOR_CONTROLPANEL_H

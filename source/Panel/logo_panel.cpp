@@ -12,13 +12,12 @@
 
 namespace zlpanel {
     LogoPanel::LogoPanel(PluginProcessor &p,
-                         zlinterface::UIBase &base) :
+                         zlInterface::UIBase &base) :
             brandDrawable(juce::Drawable::createFromImageData(BinaryData::zlaudio_svg, BinaryData::zlaudio_svgSize)),
             logoDrawable(juce::Drawable::createFromImageData(BinaryData::logo_svg, BinaryData::logo_svgSize)) {
         processorRef = &p;
         uiBase = &base;
         uiBase->setStyle(static_cast<size_t>(*p.states.getRawParameterValue(zlstate::uiStyle::ID)));
-        triggerAsyncUpdate();
     }
 
     LogoPanel::~LogoPanel() = default;
@@ -59,19 +58,14 @@ namespace zlpanel {
         auto styleID = static_cast<size_t>(*processorRef->states.getRawParameterValue(zlstate::uiStyle::ID));
         styleID = (styleID + 1) % (zlstate::uiStyle::maxV + 1);
         uiBase->setStyle(styleID);
-        processorRef->states.getParameter(zlstate::uiStyle::ID)->setValueNotifyingHost(
-                zlstate::uiStyle::convertTo01(static_cast<float>(styleID)));
-        triggerAsyncUpdate();
+        auto *para = processorRef->states.getParameter(zlstate::uiStyle::ID);
+        para->beginChangeGesture();
+        para->setValueNotifyingHost(zlstate::uiStyle::convertTo01(static_cast<float>(styleID)));
+        para->endChangeGesture();
     }
 
     void LogoPanel::setJustification(int justificationFlags) {
         justification = justificationFlags;
     }
 
-    void LogoPanel::handleAsyncUpdate() {
-        if (getTopLevelComponent() != nullptr) {
-            auto topComponent = getTopLevelComponent();
-            topComponent->repaint(topComponent->getBounds());
-        }
-    }
 }

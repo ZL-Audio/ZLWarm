@@ -14,10 +14,10 @@ You should have received a copy of the GNU General Public License along with ZLI
 #define ZLINFLATOR_MAINPANEL_H
 
 #include <juce_audio_processors/juce_audio_processors.h>
-#include "../GUI/interface_definitions.h"
+#include "../gui/gui.hpp"
 #include "control_panel.h"
 #include "top_panel.h"
-#include "meter_panel.h"
+// #include "meter_panel.h"
 #include "logo_panel.h"
 
 class MainPanel : public juce::Component {
@@ -32,11 +32,11 @@ public:
 
     void resized() override;
 private:
-    zlinterface::UIBase uiBase;
+    zlInterface::UIBase uiBase;
 
     ControlPanel controlPanel;
     TopPanel topPanel;
-    MeterPanel meterPanel;
+    // MeterPanel meterPanel;
     zlpanel::LogoPanel logoPanel;
 
 

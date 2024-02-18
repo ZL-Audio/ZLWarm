@@ -12,25 +12,54 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 #include "control_panel.h"
 
-ControlPanel::ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlinterface::UIBase &base) {
+ControlPanel::ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlInterface::UIBase &base)
+    : parametersRef(apvts), uiBase(base),
+      inputGainSlider("IN\n(dB)", base),
+      outputGainSlider("OUT\n(dB)", base),
+      lowSplitSlider("Low\n(Hz)", base),
+      highSplitSlider("High\n(Hz)", base),
+      warmSlider("Warm", base),
+      curveSlider("Curve", base) {
     // init sliders
-    std::array<std::string, 6> rotarySliderID{zldsp::inputGain::ID, zldsp::outputGain::ID,
-                                              zldsp::lowSplit::ID, zldsp::highSplit::ID,
-                                              zldsp::warm::ID, zldsp::curve::ID};
-    zlpanel::attachSliders<zlinterface::RotarySliderComponent, 6>(*this, rotarySliderList, sliderAttachments,
-                                                                  rotarySliderID,
-                                                                  apvts, base);
-    parameters = &apvts;
+    std::array<std::string, 6> rotarySliderID{
+        zldsp::inputGain::ID, zldsp::outputGain::ID,
+        zldsp::lowSplit::ID, zldsp::highSplit::ID,
+        zldsp::warm::ID, zldsp::curve::ID
+    };
+
+    zlPanel::attach({
+                        &inputGainSlider.getSlider1(), &outputGainSlider.getSlider1(),
+                        &lowSplitSlider.getSlider1(), &highSplitSlider.getSlider1(),
+                        &warmSlider.getSlider1(), &curveSlider.getSlider1()
+                    },
+                    {
+                        zldsp::inputGain::ID, zldsp::outputGain::ID,
+                        zldsp::lowSplit::ID, zldsp::highSplit::ID,
+                        zldsp::warm::ID, zldsp::curve::ID
+                    }, parametersRef, sliderAttachments);
 
     for (const juce::String &visibleChangeID: visibleChangeIDs) {
-        handleParameterChanges(visibleChangeID, parameters->getRawParameterValue(visibleChangeID)->load());
-        parameters->addParameterListener(visibleChangeID, this);
+        handleParameterChanges(visibleChangeID, parametersRef.getRawParameterValue(visibleChangeID)->load());
+        parametersRef.addParameterListener(visibleChangeID, this);
     }
+
+    inputGainSlider.getLabelLAF().setFontScale(1.5f);
+    addAndMakeVisible(inputGainSlider);
+    outputGainSlider.getLabelLAF().setFontScale(1.5f);
+    addAndMakeVisible(outputGainSlider);
+    lowSplitSlider.getLabelLAF().setFontScale(1.5f);
+    addAndMakeVisible(lowSplitSlider);
+    highSplitSlider.getLabelLAF().setFontScale(1.5f);
+    addAndMakeVisible(highSplitSlider);
+    warmSlider.getLabelLAF().setFontScale(1.5f);
+    addAndMakeVisible(warmSlider);
+    curveSlider.getLabelLAF().setFontScale(1.5f);
+    addAndMakeVisible(curveSlider);
 }
 
 ControlPanel::~ControlPanel() {
     for (const juce::String &visibleChangeID: visibleChangeIDs) {
-        parameters->removeParameterListener(visibleChangeID, this);
+        parametersRef.removeParameterListener(visibleChangeID, this);
     }
 }
 
@@ -49,14 +78,15 @@ void ControlPanel::resized() {
 
     juce::Array<juce::GridItem> items;
 
-    items.add(*inputGainSlider);
-    items.add(*lowSplitSlider);
-    items.add(*warmSlider);
-    items.add(*outputGainSlider);
-    items.add(*highSplitSlider);
-    items.add(*curveSlider);
+    items.add(inputGainSlider);
+    items.add(lowSplitSlider);
+    items.add(warmSlider);
+    items.add(outputGainSlider);
+    items.add(highSplitSlider);
+    items.add(curveSlider);
 
     grid.items = items;
+    grid.setGap(juce::Grid::Px(uiBase.getFontSize() * .5f));
     grid.performLayout(getLocalBounds());
 }
 
@@ -67,9 +97,9 @@ void ControlPanel::parameterChanged(const juce::String &parameterID, float newVa
 
 void ControlPanel::handleParameterChanges(const juce::String &parameterID, float newValue) {
     if (parameterID == zldsp::bandSplit::ID) {
-        auto f = static_cast<bool>(newValue);
-        lowSplitSlider->setEditable(f);
-        highSplitSlider->setEditable(f);
+        const auto f = static_cast<bool>(newValue);
+        lowSplitSlider.setEditable(f);
+        highSplitSlider.setEditable(f);
     }
 }
 

@@ -70,4 +70,5 @@ void PluginEditor::parameterChanged(const juce::String &parameterID, float newVa
 
 void PluginEditor::handleAsyncUpdate() {
     property.saveAPVTS(processorRef.states);
+    sendLookAndFeelChange();
 }

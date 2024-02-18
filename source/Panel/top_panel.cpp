@@ -12,36 +12,65 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 #include "top_panel.h"
 
-TopPanel::TopPanel(PluginProcessor &p,
-                   zlinterface::UIBase &base) {
-    uiBase = &base;
-    // init sliders
-    std::array<std::string, 1> sliderID{zldsp::wet::ID};
-    zlpanel::attachSliders(*this, sliderList, sliderAttachments, sliderID, p.parameters, base);
-    // init buttons
-    std::array<std::string, 1> buttonID{zldsp::bandSplit::ID};
-    zlpanel::attachButtons(*this, buttonList, buttonAttachments, buttonID, p.parameters, base);
-    // init combobox
-    std::array<std::string, 1> comboboxID{"over_sample"};
-    zlpanel::attachBoxes(*this, comboBoxList, comboboxAttachments, comboboxID, p.parameters, base);
+#include "BinaryData.h"
+
+TopPanel::TopPanel(PluginProcessor &p, zlInterface::UIBase &base)
+    : uiBase(base),
+      wetS("Wet", base),
+      bypassC("", base),
+      bandSplitC("", base),
+      oversampleC("", zldsp::overSample::choices, base),
+      oversampleL("", "OS:"),
+      nameLAF(base),
+      bypassDrawable(
+          juce::Drawable::createFromImageData(BinaryData::shutdownline_svg, BinaryData::shutdownline_svgSize)),
+      splitDrawable(juce::Drawable::createFromImageData(BinaryData::splitcellshorizontal_svg,
+                                                        BinaryData::splitcellshorizontal_svgSize)) {
+    juce::ignoreUnused(p);
+    zlPanel::attach({&wetS.getSlider()}, {zldsp::wet::ID}, p.parameters, sliderAttachments);
+
+    bypassC.setDrawable(bypassDrawable.get());
+    bandSplitC.setDrawable(splitDrawable.get());
+    zlPanel::attach({&bypassC.getButton(), &bandSplitC.getButton()},
+                    {zldsp::effectIn::ID, zldsp::bandSplit::ID},
+                    p.parameters, buttonAttachments);
+
+    nameLAF.setJustification(juce::Justification::centredRight);
+    nameLAF.setFontScale(1.5f);
+
+    oversampleL.setLookAndFeel(&nameLAF);
+    zlPanel::attach({&oversampleC.getBox()}, {zldsp::overSample::ID}, p.parameters, comboboxAttachments);
+
+    addAndMakeVisible(wetS);
+    addAndMakeVisible(bypassC);
+    addAndMakeVisible(bandSplitC);
+    addAndMakeVisible(oversampleL);
+    addAndMakeVisible(oversampleC);
 }
 
-TopPanel::~TopPanel() = default;
+TopPanel::~TopPanel() {
+    oversampleL.setLookAndFeel(nullptr);
+}
 
 void TopPanel::paint(juce::Graphics &g) { juce::ignoreUnused(g); }
 
 void TopPanel::resized() {
+    // nameLAF.setPadding(0.f, 0.f, uiBase.getFontSize() * .2f, 0.f);
+
     juce::Grid grid;
     using Track = juce::Grid::TrackInfo;
     using Fr = juce::Grid::Fr;
 
     grid.templateRows = {Track(Fr(1))};
-    grid.templateColumns = {Track(Fr(1)), Track(Fr(1)), Track(Fr(1))};
+    grid.templateColumns = {Track(Fr(20)), Track(Fr(10)), Track(Fr(10)),
+        Track(Fr(9)), Track(Fr(11))};
 
     juce::Array<juce::GridItem> items;
-    items.add(*wetSlider);
-    items.add(*splitButton);
-    items.add(*sampleRateCombobox);
+    items.add(wetS);
+    items.add(bypassC);
+    items.add(bandSplitC);
+    items.add(oversampleL);
+    items.add(oversampleC);
 
     grid.items = items;
     grid.performLayout(getLocalBounds());

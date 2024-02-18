@@ -51,7 +51,7 @@ include(JUCEDefaults)
 add_subdirectory(JUCE)
 
 # Add any other modules you want modules here, before the juce_add_plugin call
-# juce_add_module(modules/my_module)
+juce_add_module("${CMAKE_CURRENT_LIST_DIR}/modules/friz/Source/friz")
 
 # See `docs/CMake API.md` in the JUCE repo for all config options
 juce_add_plugin("${PROJECT_NAME}"
@@ -126,7 +126,7 @@ target_compile_definitions(SharedCode
         # JucePlugin_Name is for some reason doesn't use the nicer PRODUCT_NAME
         PRODUCT_NAME_WITHOUT_VERSION="${PRODUCT_NAME}"
         JUCE_DISPLAY_SPLASH_SCREEN=0
-        JUCE_COREGRAPHICS_RENDER_WITH_MULTIPLE_PAINT_CALLS=1
+        #        JUCE_COREGRAPHICS_RENDER_WITH_MULTIPLE_PAINT_CALLS=1
         JUCE_SILENCE_XCODE_15_LINKER_WARNING=1)
 
 # Link to any other modules you added (with juce_add_module) here!
@@ -144,7 +144,8 @@ target_link_libraries(SharedCode
         juce_gui_extra
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags)
+        juce::juce_recommended_warning_flags
+        friz)
 
 # Link the JUCE plugin targets our SharedCode target
 target_link_libraries("${PROJECT_NAME}" PRIVATE SharedCode)
