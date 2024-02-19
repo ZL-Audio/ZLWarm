@@ -34,4 +34,10 @@ namespace zlWaveShaper {
         juce::ScopedLock lock(paraUpdateLock);
         warm = x;
     }
+
+    template
+    class WarmInflator<float>;
+
+    template
+    class WarmInflator<double>;
 } // zlWaveShaper

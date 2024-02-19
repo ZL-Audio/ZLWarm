@@ -1,6 +1,6 @@
 /*
 ==============================================================================
-Copyright (C) 2023 - zsliu98
+Copyright (C) 2024 - zsliu98
 This file is part of ZLInflator
 
 ZLInflator is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -13,12 +13,45 @@ You should have received a copy of the GNU General Public License along with ZLI
 #ifndef ZLWarm_IIR_SPLITTER_HPP
 #define ZLWarm_IIR_SPLITTER_HPP
 
+#include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_dsp/juce_dsp.h>
+
 namespace zlSplitter {
+    /**
+     * a three-band Linkwitz-Riley filter
+     * @tparam FloatType
+     */
+    template<typename FloatType>
+    class IIRSplitter {
+    public:
+        IIRSplitter() = default;
 
-class IIRSplitter {
+        void reset();
 
-};
+        void prepare(const juce::dsp::ProcessSpec &spec);
 
+        /**
+         * split the audio buffer into internal low, mid and high buffers
+         * @param buffer
+         */
+        void split(juce::AudioBuffer <FloatType> &buffer);
+
+        /**
+         * combine the internal low, mid and high buffers into the audio buffer
+         * @param buffer
+         */
+        void combine(juce::AudioBuffer <FloatType> &buffer);
+
+        inline juce::AudioBuffer<FloatType> &getLBuffer() { return lBuffer; }
+
+        inline juce::AudioBuffer<FloatType> &getMBuffer() { return mBuffer; }
+
+        inline juce::AudioBuffer<FloatType> &getHBuffer() { return hBuffer; }
+
+    private:
+        juce::AudioBuffer<FloatType> lBuffer, mBuffer, hBuffer;
+        juce::dsp::LinkwitzRileyFilter<FloatType> filter1, filter2;
+    };
 } // zlSplitter
 
 #endif //ZLWarm_IIR_SPLITTER_HPP

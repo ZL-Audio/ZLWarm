@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 #ifndef ZL_SINGLE_METER_HPP
 #define ZL_SINGLE_METER_HPP
 
-#include "juce_audio_processors/juce_audio_processors.h"
+// #include "juce_audio_processors/juce_audio_processors.h"
 #include "juce_dsp/juce_dsp.h"
 
 namespace zlMeter {
@@ -26,12 +26,12 @@ namespace zlMeter {
 
         void process(juce::AudioBuffer<FloatType> &buffer);
 
-        std::vector<std::atomic<FloatType>> &getmaxPeak() { return maxPeak; }
+        std::deque<std::atomic<FloatType>> &getmaxPeak() { return maxPeak; }
 
-        std::vector<std::atomic<FloatType>> &getBufferPeak() { return bufferPeak; }
+        std::deque<std::atomic<FloatType>> &getBufferPeak() { return bufferPeak; }
 
     private:
-        std::vector<std::atomic<FloatType>> maxPeak, bufferPeak;
+        std::deque<std::atomic<FloatType>> maxPeak, bufferPeak;
         std::vector<FloatType> tempPeak;
         std::atomic<FloatType> decayRate, sampleRate;
         std::atomic<bool> isON = false;

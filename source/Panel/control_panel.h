@@ -36,6 +36,8 @@ private:
     juce::AudioProcessorValueTreeState &parametersRef;
     zlInterface::UIBase &uiBase;
 
+    juce::Label gainLabel, splitLabel, saturateLabel;
+    zlInterface::NameLookAndFeel nameLAF;
     zlInterface::TwoValueRotarySlider inputGainSlider, outputGainSlider, lowSplitSlider;
     zlInterface::TwoValueRotarySlider highSplitSlider, warmSlider, curveSlider;
     juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments;

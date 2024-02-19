@@ -34,7 +34,7 @@ namespace zlMeter {
         for (size_t channel = 0; channel < maxPeak.size(); ++channel) {
             for (int idx = 0; idx < buffer.getNumSamples(); ++idx) {
                 tempPeak[channel] = std::max(tempPeak[channel],
-                    std::abs(buffer.getSample(static_cast<int>(channel), idx)));
+                                             std::abs(buffer.getSample(static_cast<int>(channel), idx)));
             }
         }
 
@@ -44,4 +44,10 @@ namespace zlMeter {
             maxPeak[channel].store(std::max(maxPeak[channel].load(), tempPeak[channel]));
         }
     }
+
+    template
+    class SingleMeter<float>;
+
+    template
+    class SingleMeter<double>;
 } // zlMeter

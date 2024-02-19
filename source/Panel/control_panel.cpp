@@ -14,10 +14,14 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 ControlPanel::ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlInterface::UIBase &base)
     : parametersRef(apvts), uiBase(base),
-      inputGainSlider("IN\n(dB)", base),
-      outputGainSlider("OUT\n(dB)", base),
-      lowSplitSlider("Low\n(Hz)", base),
-      highSplitSlider("High\n(Hz)", base),
+      gainLabel("", "Gain (dB)"),
+      splitLabel("", "Split Freq (Hz)"),
+      saturateLabel("", "Saturate (%)"),
+      nameLAF(uiBase),
+      inputGainSlider("IN", base),
+      outputGainSlider("OUT", base),
+      lowSplitSlider("Low", base),
+      highSplitSlider("High", base),
       warmSlider("Warm", base),
       curveSlider("Curve", base) {
     // init sliders
@@ -43,21 +47,26 @@ ControlPanel::ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlInterfac
         parametersRef.addParameterListener(visibleChangeID, this);
     }
 
-    inputGainSlider.getLabelLAF().setFontScale(1.5f);
-    addAndMakeVisible(inputGainSlider);
-    outputGainSlider.getLabelLAF().setFontScale(1.5f);
-    addAndMakeVisible(outputGainSlider);
-    lowSplitSlider.getLabelLAF().setFontScale(1.5f);
-    addAndMakeVisible(lowSplitSlider);
-    highSplitSlider.getLabelLAF().setFontScale(1.5f);
-    addAndMakeVisible(highSplitSlider);
-    warmSlider.getLabelLAF().setFontScale(1.5f);
-    addAndMakeVisible(warmSlider);
-    curveSlider.getLabelLAF().setFontScale(1.5f);
-    addAndMakeVisible(curveSlider);
+    nameLAF.setFontScale(1.25f);
+    for (auto &l: {&gainLabel, &splitLabel, &saturateLabel}) {
+        l->setLookAndFeel(&nameLAF);
+        addAndMakeVisible(l);
+    }
+
+    for (auto &s: {
+             &inputGainSlider, &outputGainSlider,
+             &lowSplitSlider, &highSplitSlider,
+             &warmSlider, &curveSlider
+         }) {
+        s->getLabelLAF().setFontScale(1.5f);
+        addAndMakeVisible(s);
+    }
 }
 
 ControlPanel::~ControlPanel() {
+    for (auto &l: {&gainLabel, &splitLabel, &saturateLabel}) {
+        l->setLookAndFeel(nullptr);
+    }
     for (const juce::String &visibleChangeID: visibleChangeIDs) {
         parametersRef.removeParameterListener(visibleChangeID, this);
     }
@@ -73,11 +82,14 @@ void ControlPanel::resized() {
     using Track = juce::Grid::TrackInfo;
     using Fr = juce::Grid::Fr;
 
-    grid.templateRows = {Track(Fr(1)), Track(Fr(1))};
+    grid.templateRows = {Track(Fr(35)), Track(Fr(100)), Track(Fr(100))};
     grid.templateColumns = {Track(Fr(1)), Track(Fr(1)), Track(Fr(1))};
 
     juce::Array<juce::GridItem> items;
 
+    items.add(gainLabel);
+    items.add(splitLabel);
+    items.add(saturateLabel);
     items.add(inputGainSlider);
     items.add(lowSplitSlider);
     items.add(warmSlider);
