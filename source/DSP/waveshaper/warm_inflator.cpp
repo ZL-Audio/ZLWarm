@@ -11,15 +11,13 @@ namespace zlWaveShaper {
     }
 
     template<typename FloatType>
-    void WarmInflator<FloatType>::process(juce::AudioBuffer<FloatType> &buffer) {
+    template<typename ProcessContext>
+    void WarmInflator<FloatType>::process(const ProcessContext &context) {
         if (isON.load()) {
             juce::ScopedLock lock(paraUpdateLock);
-            for (int channel = 0; channel < buffer.getNumChannels(); ++channel) {
-                auto *pointer = buffer.getWritePointer(channel);
-                for (size_t i = 0; i < static_cast<size_t>(buffer.getNumSamples()); ++i) {
-                    pointer[i] = shape(pointer[i]);
-                }
-            }
+            auto inputBlock = context.getInputBlock();
+            auto outputBlock = context.getOutputBlock();
+            juce::dsp::AudioBlock<FloatType>::process(inputBlock, outputBlock, [this](FloatType x){return shape(x);});
         }
     }
 

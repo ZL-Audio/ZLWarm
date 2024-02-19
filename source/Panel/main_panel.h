@@ -22,9 +22,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 class MainPanel : public juce::Component {
 public:
-    explicit MainPanel(PluginProcessor &p,
-                       MeterSource<float> *input,
-                       MeterSource<float> *output);
+    explicit MainPanel(PluginProcessor &p);
 
     ~MainPanel() override;
 

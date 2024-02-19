@@ -14,7 +14,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 #define ZLINFLATOR_CONTROLPANEL_H
 
 #include "../gui/gui.hpp"
-#include "../dsp/dsp_defines.h"
+#include "../dsp/dsp.hpp"
 #include "panel_definitions.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
@@ -42,7 +42,7 @@ private:
     zlInterface::TwoValueRotarySlider highSplitSlider, warmSlider, curveSlider;
     juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments;
 
-    std::array<juce::String, 1> visibleChangeIDs = {zldsp::bandSplit::ID};
+    std::array<juce::String, 1> visibleChangeIDs = {zlDSP::bandSplit::ID};
 
     void handleAsyncUpdate() override;
 

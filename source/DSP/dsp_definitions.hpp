@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 #include <juce_audio_processors/juce_audio_processors.h>
 
 namespace zlDSP {
-    inline auto static const versionHint = 1;
+    inline auto static constexpr versionHint = 1;
     // floats
     template<class T>
     class FloatParameters {
@@ -101,13 +101,13 @@ namespace zlDSP {
     template<class T>
     class BoolParameters {
     public:
-        static std::unique_ptr<juce::AudioParameterBool> get(bool automate = true) {
+        static std::unique_ptr<juce::AudioParameterBool> get(const bool automate = true) {
             auto attributes = juce::AudioParameterBoolAttributes().withAutomatable(automate).withLabel(T::name);
             return std::make_unique<juce::AudioParameterBool>(juce::ParameterID(T::ID, versionHint), T::name,
                                                               T::defaultV, attributes);
         }
 
-        static std::unique_ptr<juce::AudioParameterBool> get(juce::String label, bool automate = true) {
+        static std::unique_ptr<juce::AudioParameterBool> get(const juce::String &label, const bool automate = true) {
             auto attributes = juce::AudioParameterBoolAttributes().withAutomatable(automate).withLabel(label);
             return std::make_unique<juce::AudioParameterBool>(juce::ParameterID(T::ID, versionHint), T::name,
                                                               T::defaultV, attributes);
@@ -132,13 +132,13 @@ namespace zlDSP {
     template<class T>
     class ChoiceParameters {
     public:
-        static std::unique_ptr<juce::AudioParameterChoice> get(bool automate = true) {
+        static std::unique_ptr<juce::AudioParameterChoice> get(const bool automate = true) {
             auto attributes = juce::AudioParameterChoiceAttributes().withAutomatable(automate).withLabel(T::name);
             return std::make_unique<juce::AudioParameterChoice>(
                     juce::ParameterID(T::ID, versionHint), T::name, T::choices, T::defaultI, attributes);
         }
 
-        static std::unique_ptr<juce::AudioParameterChoice> get(juce::String label, bool automate = true) {
+        static std::unique_ptr<juce::AudioParameterChoice> get(const juce::String &label, const bool automate = true) {
             auto attributes = juce::AudioParameterChoiceAttributes().withAutomatable(automate).withLabel(label);
             return std::make_unique<juce::AudioParameterChoice>(
                     juce::ParameterID(T::ID, versionHint), T::name, T::choices, T::defaultI, attributes);

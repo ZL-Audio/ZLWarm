@@ -38,7 +38,7 @@ namespace zlSplitter {
 
     template<typename FloatType>
     template<typename ProcessContext>
-    void IIRSplitter<FloatType>::split(const ProcessContext &context) noexcept {
+    void IIRSplitter<FloatType>::split(const ProcessContext &context) {
         auto inputBlock = context.getInputBlock();
         auto lBlock = juce::dsp::AudioBlock<FloatType>(lBuffer);
         auto mBlock = juce::dsp::AudioBlock<FloatType>(mBuffer);
@@ -51,6 +51,7 @@ namespace zlSplitter {
         auto mContext = juce::dsp::ProcessContextReplacing<FloatType>(mBlock);
         auto hContext = juce::dsp::ProcessContextReplacing<FloatType>(hBlock);
 
+        juce::ScopedLock lock(paraLock);
         low1.process(lContext);
         all2.process(lContext);
 
@@ -73,6 +74,22 @@ namespace zlSplitter {
         outputBlock.copyFrom(lBlock);
         outputBlock.add(mBlock);
         outputBlock.add(hBlock);
+    }
+
+    template<typename FloatType>
+    void IIRSplitter<FloatType>::setLowFreq(FloatType freq) {
+        juce::ScopedLock lock(paraLock);
+        for (auto &f: {&low1, &high1, &all1}) {
+            f->setCutoffFrequency(freq);
+        }
+    }
+
+    template<typename FloatType>
+    void IIRSplitter<FloatType>::setHighFreq(FloatType freq) {
+        juce::ScopedLock lock(paraLock);
+        for (auto &f: {&low2, &high2, &all2}) {
+            f->setCutoffFrequency(freq);
+        }
     }
 
     template

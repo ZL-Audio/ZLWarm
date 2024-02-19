@@ -44,6 +44,10 @@ namespace zlSplitter {
         template<typename ProcessContext>
         void combine(const ProcessContext &context);
 
+        void setLowFreq(FloatType freq);
+
+        void setHighFreq(FloatType freq);
+
         inline juce::AudioBuffer<FloatType> &getLBuffer() { return lBuffer; }
 
         inline juce::AudioBuffer<FloatType> &getMBuffer() { return mBuffer; }

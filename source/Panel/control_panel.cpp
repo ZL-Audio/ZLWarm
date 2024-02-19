@@ -26,9 +26,9 @@ ControlPanel::ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlInterfac
       curveSlider("Curve", base) {
     // init sliders
     std::array<std::string, 6> rotarySliderID{
-        zldsp::inputGain::ID, zldsp::outputGain::ID,
-        zldsp::lowSplit::ID, zldsp::highSplit::ID,
-        zldsp::warm::ID, zldsp::curve::ID
+        zlDSP::inputGain::ID, zlDSP::outputGain::ID,
+        zlDSP::lowSplit::ID, zlDSP::highSplit::ID,
+        zlDSP::warm::ID, zlDSP::curve::ID
     };
 
     zlPanel::attach({
@@ -37,9 +37,9 @@ ControlPanel::ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlInterfac
                         &warmSlider.getSlider1(), &curveSlider.getSlider1()
                     },
                     {
-                        zldsp::inputGain::ID, zldsp::outputGain::ID,
-                        zldsp::lowSplit::ID, zldsp::highSplit::ID,
-                        zldsp::warm::ID, zldsp::curve::ID
+                        zlDSP::inputGain::ID, zlDSP::outputGain::ID,
+                        zlDSP::lowSplit::ID, zlDSP::highSplit::ID,
+                        zlDSP::warm::ID, zlDSP::curve::ID
                     }, parametersRef, sliderAttachments);
 
     for (const juce::String &visibleChangeID: visibleChangeIDs) {
@@ -108,7 +108,7 @@ void ControlPanel::parameterChanged(const juce::String &parameterID, float newVa
 }
 
 void ControlPanel::handleParameterChanges(const juce::String &parameterID, float newValue) {
-    if (parameterID == zldsp::bandSplit::ID) {
+    if (parameterID == zlDSP::bandSplit::ID) {
         const auto f = static_cast<bool>(newValue);
         lowSplitSlider.setEditable(f);
         highSplitSlider.setEditable(f);

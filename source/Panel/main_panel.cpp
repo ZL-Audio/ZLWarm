@@ -12,9 +12,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 #include "main_panel.h"
 
-MainPanel::MainPanel(PluginProcessor &p,
-                     MeterSource<float> *input,
-                     MeterSource<float> *output) :
+MainPanel::MainPanel(PluginProcessor &p) :
         uiBase(),
         controlPanel(p.parameters, uiBase),
         topPanel(p, uiBase),

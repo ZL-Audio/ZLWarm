@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 PluginEditor::PluginEditor(PluginProcessor &p) :
         AudioProcessorEditor(&p), processorRef(p),
         property(p.states),
-        mainPanel(p, p.getInputMeterSource(), p.getOutputMeterSource()) {
+        mainPanel(p) {
 
     for (auto &ID: IDs) {
         processorRef.states.addParameterListener(ID, this);

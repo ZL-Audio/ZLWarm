@@ -53,7 +53,8 @@ namespace zlWaveShaper {
 
         void prepare(const juce::dsp::ProcessSpec &spec);
 
-        void process(juce::AudioBuffer<FloatType> &buffer);
+        template<typename ProcessContext>
+        void process(const ProcessContext &context);
 
         void setCurve(FloatType x);
 

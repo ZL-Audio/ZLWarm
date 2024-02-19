@@ -24,7 +24,8 @@ namespace zlMeter {
 
         void prepare(const juce::dsp::ProcessSpec &spec);
 
-        void process(juce::AudioBuffer<FloatType> &buffer);
+        template<typename ProcessContext>
+        void process(const ProcessContext &context);
 
         std::deque<std::atomic<FloatType>> &getmaxPeak() { return maxPeak; }
 

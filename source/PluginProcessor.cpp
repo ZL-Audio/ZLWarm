@@ -27,15 +27,10 @@ PluginProcessor::PluginProcessor()
 ),
 #endif
           dummyProcessor(),
-          parameters(*this, nullptr, juce::Identifier("ZLWarmParameters"), zldsp::getParameterLayout()),
-          states(dummyProcessor, nullptr, juce::Identifier("ZLWarmStates"), zlstate::getParameterLayout()),
-          waveShaper(*this),
-          waveShaperAttach(waveShaper, parameters) {
-    inGain.setGainDecibels(zldsp::inputGain::defaultV);
-    outGain.setGainDecibels(zldsp::outputGain::defaultV);
-    parameters.addParameterListener(zldsp::inputGain::ID, this);
-    parameters.addParameterListener(zldsp::outputGain::ID, this);
-    waveShaperAttach.addListeners();
+          parameters(*this, nullptr, juce::Identifier("ZLWarmParameters"), zlDSP::getParameterLayout()),
+          states(dummyProcessor, nullptr, juce::Identifier("ZLWarmStates"), zlstate::getParameterLayout())
+          {
+
 }
 
 PluginProcessor::~PluginProcessor() = default;
@@ -100,19 +95,11 @@ void PluginProcessor::prepareToPlay(double sampleRate,
     auto channels = static_cast<juce::uint32> (juce::jmin(getMainBusNumInputChannels(), getMainBusNumOutputChannels()));
     juce::dsp::ProcessSpec spec{sampleRate, static_cast<juce::uint32> (samplesPerBlock), channels};
 
-    inGain.prepare(spec);
-    outGain.prepare(spec);
-    meterIn.prepare(spec);
-    meterOut.prepare(spec);
-    waveShaper.prepare(spec);
+
 }
 
 void PluginProcessor::reset() {
-    inGain.reset();
-    outGain.reset();
-    meterIn.reset();
-    meterOut.reset();
-    waveShaper.reset();
+
 }
 
 void PluginProcessor::releaseResources() {
@@ -145,11 +132,6 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float> &buffer,
         buffer.clear(i, 0, buffer.getNumSamples());
 
     juce::dsp::AudioBlock<float> block(buffer);
-    inGain.process(juce::dsp::ProcessContextReplacing<float>(block));
-    meterIn.process(juce::dsp::ProcessContextReplacing<float>(block));
-    waveShaper.process(juce::dsp::ProcessContextReplacing<float>(block));
-    outGain.process(juce::dsp::ProcessContextReplacing<float>(block));
-    meterOut.process(juce::dsp::ProcessContextReplacing<float>(block));
 }
 
 //==============================================================================
@@ -184,24 +166,4 @@ void PluginProcessor::setStateInformation(const void *data,
 // This creates new instances of the plugin..
 juce::AudioProcessor *JUCE_CALLTYPE createPluginFilter() {
     return new PluginProcessor();
-}
-
-MeterSource<float> *PluginProcessor::getInputMeterSource() {
-    return &meterIn;
-}
-
-MeterSource<float> *PluginProcessor::getOutputMeterSource() {
-    return &meterOut;
-}
-
-shaper::ShaperMixer<float> *PluginProcessor::getShaperMixer() {
-    return waveShaper.getShaper();
-}
-
-void PluginProcessor::parameterChanged(const juce::String &parameterID, float newValue) {
-    if (parameterID.equalsIgnoreCase(zldsp::inputGain::ID)) {
-        inGain.setGainDecibels(newValue);
-    } else if (parameterID.equalsIgnoreCase(zldsp::outputGain::ID)) {
-        outGain.setGainDecibels(newValue);
-    }
 }

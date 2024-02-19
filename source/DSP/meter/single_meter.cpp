@@ -26,15 +26,18 @@ namespace zlMeter {
     }
 
     template<typename FloatType>
-    void SingleMeter<FloatType>::process(juce::AudioBuffer<FloatType> &buffer) {
+    template<typename ProcessContext>
+    void SingleMeter<FloatType>::process(const ProcessContext &context) {
+        juce::dsp::AudioBlock<FloatType> outputBlock = context.getOutputBlock();
         if (!isON.load()) return;
-        const auto decay = decayRate.load() * static_cast<FloatType>(buffer.getNumSamples()) / sampleRate.load();
+        const auto decay = decayRate.load() * static_cast<FloatType>(outputBlock.getNumSamples()) / sampleRate.load();
 
         std::fill(tempPeak.begin(), tempPeak.end(), FloatType(0));
         for (size_t channel = 0; channel < maxPeak.size(); ++channel) {
-            for (int idx = 0; idx < buffer.getNumSamples(); ++idx) {
+            for (size_t idx = 0; idx < outputBlock.getNumSamples(); ++idx) {
                 tempPeak[channel] = std::max(tempPeak[channel],
-                                             std::abs(buffer.getSample(static_cast<int>(channel), idx)));
+                                             std::abs(outputBlock.getSample(
+                                                 static_cast<int>(channel), static_cast<int>(idx))));
             }
         }
 

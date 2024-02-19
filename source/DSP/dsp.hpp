@@ -13,8 +13,10 @@ You should have received a copy of the GNU General Public License along with ZLI
 #ifndef ZLWarm_DSP_HPP
 #define ZLWarm_DSP_HPP
 
+#include "controller.hpp"
 #include "meter/meter.hpp"
 #include "waveshaper/waveshaper.hpp"
 #include "splitter/splitter.hpp"
+#include "dsp_definitions.hpp"
 
 #endif //ZLWarm_DSP_HPP

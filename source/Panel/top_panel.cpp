@@ -19,7 +19,7 @@ TopPanel::TopPanel(PluginProcessor &p, zlInterface::UIBase &base)
       wetS("Wet", base),
       bypassC("", base),
       bandSplitC("", base),
-      oversampleC("", zldsp::overSample::choices, base),
+      oversampleC("", zlDSP::overSample::choices, base),
       oversampleL("", "OS:"),
       nameLAF(base),
       bypassDrawable(
@@ -27,19 +27,19 @@ TopPanel::TopPanel(PluginProcessor &p, zlInterface::UIBase &base)
       splitDrawable(juce::Drawable::createFromImageData(BinaryData::splitcellshorizontal_svg,
                                                         BinaryData::splitcellshorizontal_svgSize)) {
     juce::ignoreUnused(p);
-    zlPanel::attach({&wetS.getSlider()}, {zldsp::wet::ID}, p.parameters, sliderAttachments);
+    zlPanel::attach({&wetS.getSlider()}, {zlDSP::wet::ID}, p.parameters, sliderAttachments);
 
     bypassC.setDrawable(bypassDrawable.get());
     bandSplitC.setDrawable(splitDrawable.get());
     zlPanel::attach({&bypassC.getButton(), &bandSplitC.getButton()},
-                    {zldsp::effectIn::ID, zldsp::bandSplit::ID},
+                    {zlDSP::effectIn::ID, zlDSP::bandSplit::ID},
                     p.parameters, buttonAttachments);
 
     nameLAF.setJustification(juce::Justification::centredRight);
     nameLAF.setFontScale(1.5f);
 
     oversampleL.setLookAndFeel(&nameLAF);
-    zlPanel::attach({&oversampleC.getBox()}, {zldsp::overSample::ID}, p.parameters, comboboxAttachments);
+    zlPanel::attach({&oversampleC.getBox()}, {zlDSP::overSample::ID}, p.parameters, comboboxAttachments);
 
     addAndMakeVisible(wetS);
     addAndMakeVisible(bypassC);
