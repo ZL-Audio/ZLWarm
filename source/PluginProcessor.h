@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 #include "dsp/dsp_defines.h"
 #include "dsp/MeterSource.h"
 #include "dsp/WaveShaper.h"
+#include "dsp/dsp.hpp"
 #include "gui/gui.hpp"
 #include "state/dummy_processor.h"
 #include "state/state_definitions.h"
