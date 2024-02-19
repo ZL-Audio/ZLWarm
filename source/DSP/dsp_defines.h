@@ -36,7 +36,7 @@ namespace zldsp {
     public:
         auto static constexpr ID = "input_gain";
         auto static constexpr name = "IN Gain (dB)";
-        inline auto static const range = juce::NormalisableRange<float>(-16.f, 16.f, .1f, 0.5, true);
+        inline auto static const range = juce::NormalisableRange<float>(-16.f, 16.f, .01f, 0.5, true);
         auto static constexpr defaultV = 0.0f;
     };
 
@@ -44,7 +44,7 @@ namespace zldsp {
     public:
         auto static constexpr ID = "output_gain";
         auto static constexpr name = "OUT Gain (dB)";
-        inline auto static const range = juce::NormalisableRange<float>(-16.f, 16.f, .1f, 0.5, true);
+        inline auto static const range = juce::NormalisableRange<float>(-16.f, 16.f, .01f, 0.5, true);
         auto static constexpr defaultV = 0.0f;
     };
 
@@ -85,7 +85,7 @@ namespace zldsp {
     public:
         auto static constexpr ID = "low_split";
         auto static constexpr name = "Low Split (Hz)";
-        inline auto static const range = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.2f);
+        inline auto static const range = juce::NormalisableRange<float>(20.0f, 20000.0f, .1f, 0.2f);
         auto static constexpr defaultV = 240.0f;
     };
 
@@ -93,7 +93,7 @@ namespace zldsp {
     public:
         auto static constexpr ID = "high_split";
         auto static constexpr name = "High Split (Hz)";
-        inline auto static const range = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.2f);
+        inline auto static const range = juce::NormalisableRange<float>(20.0f, 20000.0f, .1f, 0.2f);
         auto static constexpr defaultV = 2400.0f;
     };
 
