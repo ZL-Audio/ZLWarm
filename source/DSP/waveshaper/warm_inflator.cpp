@@ -12,12 +12,13 @@ namespace zlWaveShaper {
 
     template<typename FloatType>
     void WarmInflator<FloatType>::process(juce::AudioBuffer<FloatType> &buffer) {
-        juce::ScopedLock lock(paraUpdateLock);
-        for (int channel = 0; channel < buffer.getNumChannels(); ++channel) {
-            auto *pointer = buffer.getWritePointer(channel);
-
-            for (size_t i = 0; i < static_cast<size_t>(buffer.getNumSamples()); ++i) {
-                pointer[i] = shape(pointer[i]);
+        if (isON.load()) {
+            juce::ScopedLock lock(paraUpdateLock);
+            for (int channel = 0; channel < buffer.getNumChannels(); ++channel) {
+                auto *pointer = buffer.getWritePointer(channel);
+                for (size_t i = 0; i < static_cast<size_t>(buffer.getNumSamples()); ++i) {
+                    pointer[i] = shape(pointer[i]);
+                }
             }
         }
     }

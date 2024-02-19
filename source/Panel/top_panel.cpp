@@ -56,6 +56,7 @@ void TopPanel::paint(juce::Graphics &g) { juce::ignoreUnused(g); }
 
 void TopPanel::resized() {
     // nameLAF.setPadding(0.f, 0.f, uiBase.getFontSize() * .2f, 0.f);
+    wetS.setPadding(uiBase.getFontSize(), 0.f);
 
     juce::Grid grid;
     using Track = juce::Grid::TrackInfo;

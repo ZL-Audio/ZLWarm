@@ -59,10 +59,13 @@ namespace zlWaveShaper {
 
         void setWarm(FloatType x);
 
+        void enable(const bool x) { isON.store(x); }
+
     private:
         PositiveShaper pShaper;
         NegativeShaper nShaper;
         FloatType warm;
+        std::atomic<bool> isON;
 
         juce::CriticalSection paraUpdateLock;
 

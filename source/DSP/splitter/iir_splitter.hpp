@@ -32,15 +32,17 @@ namespace zlSplitter {
 
         /**
          * split the audio buffer into internal low, mid and high buffers
-         * @param buffer
+         * @param context
          */
-        void split(juce::AudioBuffer <FloatType> &buffer);
+        template<typename ProcessContext>
+        void split(const ProcessContext &context);
 
         /**
          * combine the internal low, mid and high buffers into the audio buffer
-         * @param buffer
+         * @param context
          */
-        void combine(juce::AudioBuffer <FloatType> &buffer);
+        template<typename ProcessContext>
+        void combine(const ProcessContext &context);
 
         inline juce::AudioBuffer<FloatType> &getLBuffer() { return lBuffer; }
 
@@ -50,7 +52,10 @@ namespace zlSplitter {
 
     private:
         juce::AudioBuffer<FloatType> lBuffer, mBuffer, hBuffer;
-        juce::dsp::LinkwitzRileyFilter<FloatType> filter1, filter2;
+        juce::dsp::LinkwitzRileyFilter<FloatType> low1, high1, all1;
+        juce::dsp::LinkwitzRileyFilter<FloatType> low2, high2, all2;
+
+        juce::CriticalSection paraLock;
     };
 } // zlSplitter
 

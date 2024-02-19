@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
-namespace zldsp {
+namespace zlDSP {
     inline auto static const versionHint = 1;
     // floats
     template<class T>
