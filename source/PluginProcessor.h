@@ -12,20 +12,17 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 #pragma once
 
-#include "DSP/dsp_defines.h"
-#include "DSP/MeterSource.h"
-#include "DSP/WaveShaper.h"
-#include "GUI/interface_definitions.h"
-#include "State/dummy_processor.h"
-#include "State/state_definitions.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
+
+#include "dsp/dsp.hpp"
+#include "state/dummy_processor.h"
+#include "state/state_definitions.h"
 
 //==============================================================================
 /**
  */
-class PluginProcessor : public juce::AudioProcessor,
-                        public juce::AudioProcessorValueTreeState::Listener
+class PluginProcessor : public juce::AudioProcessor
 #if JucePlugin_Enable_ARA
     ,
                                  public juce::AudioProcessorARAExtension
@@ -90,21 +87,12 @@ public:
 
     void setStateInformation(const void *data, int sizeInBytes) override;
 
-    MeterSource<float> *getInputMeterSource();
-
-    MeterSource<float> *getOutputMeterSource();
-
-    shaper::ShaperMixer<float> *getShaperMixer();
-
-    void parameterChanged(const juce::String &parameterID, float newValue) override;
-
+    inline zlDSP::Controller<float> &getController() { return controller; }
 
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 
-    juce::dsp::Gain<float> inGain, outGain;
-    MeterSource<float> meterIn, meterOut;
-    WaveShaper<float> waveShaper;
-    WaveShaperAttach<float> waveShaperAttach;
+    zlDSP::Controller<float> controller;
+    zlDSP::ControllerAttach<float> controllerAttach;
 };

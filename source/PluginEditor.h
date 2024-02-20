@@ -12,9 +12,9 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 #pragma once
 
-#include "Panel/main_panel.h"
-#include "State/state_definitions.h"
-#include "State/property.h"
+#include "panel/main_panel.h"
+#include "state/state_definitions.h"
+#include "state/property.h"
 #include "PluginProcessor.h"
 
 //==============================================================================

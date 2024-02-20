@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License along with ZLI
 PluginEditor::PluginEditor(PluginProcessor &p) :
         AudioProcessorEditor(&p), processorRef(p),
         property(p.states),
-        mainPanel(p, p.getInputMeterSource(), p.getOutputMeterSource()) {
+        mainPanel(p) {
 
     for (auto &ID: IDs) {
         processorRef.states.addParameterListener(ID, this);
     }
     // set font
-    auto sourceCodePro = juce::Typeface::createSystemTypefaceFor(BinaryData::OpenSansSemiBold_ttf,
-                                                                 BinaryData::OpenSansSemiBold_ttfSize);
+    auto sourceCodePro = juce::Typeface::createSystemTypefaceFor(BinaryData::MiSansLatinMedium_ttf,
+                                                                 BinaryData::MiSansLatinMedium_ttfSize);
     juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypeface(sourceCodePro);
 
     // add main panel
@@ -70,4 +70,5 @@ void PluginEditor::parameterChanged(const juce::String &parameterID, float newVa
 
 void PluginEditor::handleAsyncUpdate() {
     property.saveAPVTS(processorRef.states);
+    sendLookAndFeelChange();
 }
