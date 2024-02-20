@@ -36,7 +36,7 @@ namespace zlDSP {
             }
         }
         mainSpec = spec;
-        setOverSampleID(0);
+        setOverSampleID(oversampleID);
     }
 
     template<typename FloatType>
