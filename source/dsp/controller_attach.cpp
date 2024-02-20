@@ -20,7 +20,7 @@ namespace zlDSP {
         : processorRef(processor),
           parametersRef(parameters),
           controllerRef(controller) {
-        for (size_t i = 0; i < IDs.size(); ++i) {
+        for (size_t i = 0; i < defaultVs.size(); ++i) {
             handleParameterChange(IDs[i], defaultVs[i]);
         }
         for (auto &ID: IDs) {

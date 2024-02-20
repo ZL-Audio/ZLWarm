@@ -55,7 +55,11 @@ namespace zlDSP {
 
         inline int getLatency() {
             juce::ScopedLock lock(oversampleLock);
-            return static_cast<int>(overSamplers[oversampleID]->getLatencyInSamples());
+            if (overSamplers[oversampleID] != nullptr) {
+                return static_cast<int>(overSamplers[oversampleID]->getLatencyInSamples());
+            } else {
+                return 0;
+            }
         }
 
     private:
