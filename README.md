@@ -34,12 +34,16 @@ See the releases for the latest version.
 
 ## License
 
-ZLWarm is licensed under GPLv3, as found in the [LICENSE](LICENSE) file.
+ZLWarm is licensed under GPLv3, as found in the [LICENSE.md](LICENSE.md) file.
 
 Copyright (c) 2023 - [zsliu98](https://github.com/zsliu98)
 
 JUCE framework from [JUCE](https://github.com/juce-framework/JUCE)
 
 JUCE template from [pamplejuce](https://github.com/sudara/pamplejuce)
+
+[Friz](https://github.com/bgporter/animator) by [bgporter](https://github.com/bgporter)
+
+[RemixIcon](https://github.com/Remix-Design/RemixIcon) by [Remix-Design](https://github.com/Remix-Design)
 
 Font from CMU Open Sans, Font Awesome and MiSans.
