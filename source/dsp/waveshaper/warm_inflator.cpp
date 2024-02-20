@@ -15,7 +15,8 @@ namespace zlWaveShaper {
         juce::ScopedLock lock(paraUpdateLock);
         for (int i = 0; i < static_cast<int>(block.getNumChannels()); ++i) {
             for (int j = 0; j < static_cast<int>(block.getNumSamples()); ++j) {
-                const auto x = block.getSample(i, j);
+                const auto x = juce::jlimit(FloatType(-1), FloatType(1),
+                    block.getSample(i, j));
                 block.setSample(i, j, wet * shape(x) + (1 - wet) * x);
             }
         }

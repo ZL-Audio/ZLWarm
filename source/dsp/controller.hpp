@@ -53,14 +53,7 @@ namespace zlDSP {
 
         inline void enableShaper(const bool x) { isShaperON.store(x); }
 
-        inline int getLatency() {
-            juce::ScopedLock lock(oversampleLock);
-            if (overSamplers[oversampleID] != nullptr) {
-                return static_cast<int>(overSamplers[oversampleID]->getLatencyInSamples());
-            } else {
-                return 0;
-            }
-        }
+        inline int getLatency() const { return latency.load(); }
 
     private:
         zlMeter::SingleMeter<FloatType> inMeter, outMeter;
@@ -75,6 +68,7 @@ namespace zlDSP {
         std::array<std::unique_ptr<juce::dsp::Oversampling<FloatType> >, 5> overSamplers{};
         std::array<int, 5> overSampleRate = {1, 2, 4, 8, 16};
         size_t oversampleID{0};
+        std::atomic<int> latency{0};
         juce::CriticalSection oversampleLock;
         juce::dsp::ProcessSpec mainSpec{44100, 512, 2};
     };

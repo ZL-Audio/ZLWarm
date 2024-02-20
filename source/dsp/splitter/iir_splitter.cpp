@@ -39,6 +39,12 @@ namespace zlSplitter {
     template<typename FloatType>
     void IIRSplitter<FloatType>::split(juce::dsp::AudioBlock<FloatType> block) {
         auto inputBlock = block;
+        lBuffer.setSize(static_cast<int>(block.getNumChannels()), static_cast<int>(block.getNumSamples()),
+            true, false, true);
+        mBuffer.setSize(static_cast<int>(block.getNumChannels()), static_cast<int>(block.getNumSamples()),
+            true, false, true);
+        hBuffer.setSize(static_cast<int>(block.getNumChannels()), static_cast<int>(block.getNumSamples()),
+            true, false, true);
         auto lBlock = juce::dsp::AudioBlock<FloatType>(lBuffer);
         auto mBlock = juce::dsp::AudioBlock<FloatType>(mBuffer);
         auto hBlock = juce::dsp::AudioBlock<FloatType>(hBuffer);

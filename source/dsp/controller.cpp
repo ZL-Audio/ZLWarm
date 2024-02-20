@@ -102,6 +102,9 @@ namespace zlDSP {
         };
         shaper.prepare(overSampleSpec);
         splitter.prepare(overSampleSpec);
+        if (overSamplers[oversampleID] != nullptr) {
+            latency.store(static_cast<int>(overSamplers[oversampleID]->getLatencyInSamples()));
+        }
     }
 
     template
