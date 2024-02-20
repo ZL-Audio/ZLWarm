@@ -7,7 +7,8 @@
 namespace zlInterface {
     TwoValueRotarySlider::TwoValueRotarySlider(const juce::String &labelText, UIBase &base)
         : uiBase(base), slider1LAF(base), slider2LAF(base),
-          labelLookAndFeel(base), labelLookAndFeel1(base), labelLookAndFeel2(base), textBoxLAF(base),
+          labelLookAndFeel(base, 2),
+          labelLookAndFeel1(base), labelLookAndFeel2(base), textBoxLAF(base, 0),
           animator{} {
         juce::ignoreUnused(uiBase);
         for (auto const s: {&slider1, &slider2}) {
@@ -284,5 +285,4 @@ namespace zlInterface {
             label2.setText(getDisplayValue(slider2), juce::dontSendNotification);
         }
     }
-
 }

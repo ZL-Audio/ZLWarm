@@ -22,6 +22,7 @@ MeterPanel::MeterPanel(zlDSP::Controller<float> &controller, zlInterface::UIBase
     addAndMakeVisible(inPanel);
     addAndMakeVisible(outPanel);
 
+    labelLAF.setJustification(juce::Justification::centred);
     labelLAF.setFontScale(1.25f);
     inLabel.setLookAndFeel(&labelLAF);
     outLabel.setLookAndFeel(&labelLAF);
@@ -44,7 +45,7 @@ void MeterPanel::resized() {
     using Track = juce::Grid::TrackInfo;
     using Fr = juce::Grid::Fr;
 
-    grid.templateRows = {Track(Fr(1)), Track(Fr(15))};
+    grid.templateRows = {Track(Fr(11)), Track(Fr(150))};
     grid.templateColumns = {Track(Fr(6)), Track(Fr(6))};
 
     grid.items = {

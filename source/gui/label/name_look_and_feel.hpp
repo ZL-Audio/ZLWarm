@@ -18,7 +18,8 @@
 namespace zlInterface {
     class NameLookAndFeel final : public juce::LookAndFeel_V4 {
     public:
-        explicit NameLookAndFeel(UIBase &base) {
+        explicit NameLookAndFeel(UIBase &base, const int multiLine = 0)
+        : isMultiLine(multiLine) {
             uiBase = &base;
         }
 
@@ -37,8 +38,11 @@ namespace zlInterface {
             bound.removeFromBottom(dPadding.load());
             bound.removeFromLeft(lPadding.load());
             bound.removeFromRight(rPadding.load());
-            // g.drawText(label.getText(), bound, justification.load());
-            g.drawFittedText(label.getText(), bound.toNearestInt(), justification.load(), 2, 1.f);
+            if (isMultiLine >= 1) {
+                g.drawFittedText(label.getText(), bound.toNearestInt(), justification.load(), 2, 1.f);
+            } else {
+                g.drawText(label.getText(), bound, justification.load());
+            }
         }
 
         inline void setEditable(const bool f) { editable.store(f); }
@@ -64,6 +68,7 @@ namespace zlInterface {
         std::atomic<float> lPadding{0.f}, rPadding{0.f}, uPadding{0.f}, dPadding{0.f};
 
         UIBase *uiBase;
+        int isMultiLine;
     };
 }
 

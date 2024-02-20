@@ -19,7 +19,8 @@ private:
     zlInterface::UIBase &uiBase;
     constexpr static float maxDB = 0.f, minDB = -60.f;
     constexpr static size_t numScales = 5;
-    constexpr static float labelPortion = .125f;
+    constexpr static float labelPortion = .075f;
+    constexpr static bool ignoreFirst = true;
 };
 
 } // zlPanel

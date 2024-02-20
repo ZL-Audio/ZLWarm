@@ -41,14 +41,16 @@ namespace zlPanel {
         if (mmaxPeak > minDB) {
             if (mmaxPeak >= 0.f) {
                 g.setColour(uiBase.getTextColor());
+                g.drawText(juce::String(mmaxPeak).substring(0, 4),
+                       labelBound, juce::Justification::centredBottom);
             } else {
                 g.setColour(uiBase.getTextInactiveColor());
+                g.drawText(juce::String(mmaxPeak).substring(0, 5),
+                       labelBound, juce::Justification::centredBottom);
             }
-            g.drawText(juce::String(mmaxPeak).substring(0, 5),
-                       labelBound, juce::Justification::centredTop);
         } else {
             g.setColour(uiBase.getTextInactiveColor());
-            g.drawText("-inf", labelBound, juce::Justification::centredTop);
+            g.drawText("-inf", labelBound, juce::Justification::centredBottom);
         }
         // draw rectangles
         g.setColour(uiBase.getTextInactiveColor());
