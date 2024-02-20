@@ -23,8 +23,8 @@ PluginEditor::PluginEditor(PluginProcessor &p) :
         processorRef.states.addParameterListener(ID, this);
     }
     // set font
-    auto sourceCodePro = juce::Typeface::createSystemTypefaceFor(BinaryData::OpenSansSemiBold_ttf,
-                                                                 BinaryData::OpenSansSemiBold_ttfSize);
+    auto sourceCodePro = juce::Typeface::createSystemTypefaceFor(BinaryData::MiSansLatinMedium_ttf,
+                                                                 BinaryData::MiSansLatinMedium_ttfSize);
     juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypeface(sourceCodePro);
 
     // add main panel

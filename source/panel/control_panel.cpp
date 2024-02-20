@@ -47,7 +47,7 @@ ControlPanel::ControlPanel(juce::AudioProcessorValueTreeState &apvts, zlInterfac
         parametersRef.addParameterListener(visibleChangeID, this);
     }
 
-    nameLAF.setFontScale(1.25f);
+    nameLAF.setFontScale(1.2f);
     for (auto &l: {&gainLabel, &splitLabel, &saturateLabel}) {
         l->setLookAndFeel(&nameLAF);
         addAndMakeVisible(l);
