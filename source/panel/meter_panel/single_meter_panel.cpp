@@ -47,7 +47,8 @@ namespace zlPanel {
             g.drawText(juce::String(mmaxPeak).substring(0, 5),
                        labelBound, juce::Justification::centredTop);
         } else {
-            g.drawText("-inf", labelBound, juce::Justification::centred);
+            g.setColour(uiBase.getTextInactiveColor());
+            g.drawText("-inf", labelBound, juce::Justification::centredTop);
         }
         // draw rectangles
         g.setColour(uiBase.getTextInactiveColor());
