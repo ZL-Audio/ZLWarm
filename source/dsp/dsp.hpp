@@ -14,6 +14,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 #define ZLWarm_DSP_HPP
 
 #include "controller.hpp"
+#include "controller_attach.hpp"
 #include "meter/meter.hpp"
 #include "waveshaper/waveshaper.hpp"
 #include "splitter/splitter.hpp"

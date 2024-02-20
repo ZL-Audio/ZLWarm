@@ -11,13 +11,13 @@ namespace zlWaveShaper {
     }
 
     template<typename FloatType>
-    template<typename ProcessContext>
-    void WarmInflator<FloatType>::process(const ProcessContext &context) {
-        if (isON.load()) {
-            juce::ScopedLock lock(paraUpdateLock);
-            auto inputBlock = context.getInputBlock();
-            auto outputBlock = context.getOutputBlock();
-            juce::dsp::AudioBlock<FloatType>::process(inputBlock, outputBlock, [this](FloatType x){return shape(x);});
+    void WarmInflator<FloatType>::process(juce::dsp::AudioBlock<FloatType> block) {
+        juce::ScopedLock lock(paraUpdateLock);
+        for (int i = 0; i < static_cast<int>(block.getNumChannels()); ++i) {
+            for (int j = 0; j < static_cast<int>(block.getNumSamples()); ++j) {
+                const auto x = block.getSample(i, j);
+                block.setSample(i, j, wet * shape(x) + (1 - wet) * x);
+            }
         }
     }
 
@@ -32,6 +32,12 @@ namespace zlWaveShaper {
     void WarmInflator<FloatType>::setWarm(FloatType x) {
         juce::ScopedLock lock(paraUpdateLock);
         warm = x;
+    }
+
+    template<typename FloatType>
+    void WarmInflator<FloatType>::setWet(FloatType x) {
+        juce::ScopedLock lock(paraUpdateLock);
+        wet = x;
     }
 
     template

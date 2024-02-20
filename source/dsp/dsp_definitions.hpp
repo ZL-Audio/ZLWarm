@@ -54,8 +54,11 @@ namespace zlDSP {
         auto static constexpr name = "Wet (%)";
         inline auto static const range = juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f);
         auto static constexpr defaultV = 100.0f;
-        static float formatV(float v) {
+        inline static float formatV(const float v) {
             return v / 100.f;
+        }
+        inline static double formatV(const double v) {
+            return v / 100.0;
         }
     };
 
@@ -65,8 +68,11 @@ namespace zlDSP {
         auto static constexpr name = "Curve (%)";
         inline auto static const range = juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f);
         auto static constexpr defaultV = 50.0f;
-        static float formatV(float v) {
+        inline static float formatV(const float v) {
             return v / 100.f;
+        }
+        inline static double formatV(const double v) {
+            return v / 100.0;
         }
     };
 
@@ -76,8 +82,11 @@ namespace zlDSP {
         auto static constexpr name = "Warm (%)";
         inline auto static const range = juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f);
         auto static constexpr defaultV = 0.0f;
-        static float formatV(float v) {
+        inline static float formatV(const float v) {
             return v / 100.f;
+        }
+        inline static double formatV(const double v) {
+            return v / 100.0;
         }
     };
 
@@ -158,8 +167,7 @@ namespace zlDSP {
         layout.add(inputGain::get(), outputGain::get(), wet::get(),
                    warm::get(), curve::get(),
                    lowSplit::get(), highSplit::get(),
-                   effectIn::get(), bandSplit::get(),
-                   overSample::get());
+                   effectIn::get(), bandSplit::get(), overSample::get());
         return layout;
     }
 }

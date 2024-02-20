@@ -10,29 +10,39 @@ You should have received a copy of the GNU General Public License along with ZLI
 ==============================================================================
 */
 
-#ifndef ZLINFLATOR_METERPANEL_H
-#define ZLINFLATOR_METERPANEL_H
+#ifndef ZLWarm_SINGLE_METER_PANEL_HPP
+#define ZLWarm_SINGLE_METER_PANEL_HPP
 
-#include "../dsp/dsp.hpp"
-#include "../gui/gui.hpp"
-#include "meter_panel/single_meter_panel.hpp"
+#include "../../dsp/dsp.hpp"
+#include "meter_scale_panel.hpp"
+#include "../../gui/gui.hpp"
 
-class MeterPanel final : public juce::Component, private juce::Timer {
+namespace zlPanel {
+
+class SingleMeterPanel final : public juce::Component {
 public:
-    explicit MeterPanel(zlDSP::Controller<float> &controller,
-                        zlInterface::UIBase &base);
+    explicit SingleMeterPanel(zlMeter::SingleMeter<float> &meter, zlInterface::UIBase &base);
 
-    ~MeterPanel() override;
+    ~SingleMeterPanel() override;
+
+    void paint(juce::Graphics &g) override;
 
     void resized() override;
 
-private:
-    zlInterface::UIBase &uiBase;
-    zlPanel::SingleMeterPanel inPanel, outPanel;
-    juce::Label inLabel, outLabel;
-    zlInterface::NameLookAndFeel labelLAF;
+    void mouseDown(const juce::MouseEvent &event) override;
 
-    void timerCallback() override;
+private:
+    zlMeter::SingleMeter<float> &m;
+    zlInterface::UIBase &uiBase;
+    constexpr static float maxDB = 0.f, minDB = -60.f;
+    constexpr static size_t numScales = 5;
+    constexpr static float labelPortion = .125f, paddingPortion = .2f;
+
+    MeterScalePanel scalePanel;
+
+    juce::Path path;
 };
 
-#endif //ZLINFLATOR_METERPANEL_H
+} // zlPanel
+
+#endif //ZLWarm_SINGLE_METER_PANEL_HPP

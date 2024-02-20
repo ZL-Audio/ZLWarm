@@ -87,12 +87,12 @@ public:
 
     void setStateInformation(const void *data, int sizeInBytes) override;
 
+    inline zlDSP::Controller<float> &getController() { return controller; }
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 
-    // juce::dsp::Gain<float> inGain, outGain;
-    // MeterSource<float> meterIn, meterOut;
-    // WaveShaper<float> waveShaper;
-    // WaveShaperAttach<float> waveShaperAttach;
+    zlDSP::Controller<float> controller;
+    zlDSP::ControllerAttach<float> controllerAttach;
 };

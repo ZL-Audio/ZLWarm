@@ -22,20 +22,28 @@ namespace zlMeter {
     public:
         SingleMeter() = default;
 
+        void reset();
+
         void prepare(const juce::dsp::ProcessSpec &spec);
 
-        template<typename ProcessContext>
-        void process(const ProcessContext &context);
+        void process(juce::dsp::AudioBlock<FloatType> block);
 
-        std::deque<std::atomic<FloatType>> &getmaxPeak() { return maxPeak; }
+        std::deque<std::atomic<FloatType> > &getmaxPeak() { return maxPeak; }
 
-        std::deque<std::atomic<FloatType>> &getBufferPeak() { return bufferPeak; }
+        std::deque<std::atomic<FloatType> > &getBufferPeak() { return bufferPeak; }
+
+        void enable(const bool x) { isON.store(x); }
+
+        juce::CriticalSection &getLock() { return resizeLock; }
 
     private:
-        std::deque<std::atomic<FloatType>> maxPeak, bufferPeak;
+        std::deque<std::atomic<FloatType> > maxPeak, bufferPeak;
         std::vector<FloatType> tempPeak;
-        std::atomic<FloatType> decayRate, sampleRate;
+        std::atomic<FloatType> decayRate{2}, sampleRate;
+        std::vector<FloatType> currentDecay;
         std::atomic<bool> isON = false;
+
+        juce::CriticalSection resizeLock;
     };
 } // zlMeter
 

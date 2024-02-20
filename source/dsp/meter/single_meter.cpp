@@ -14,21 +14,27 @@ You should have received a copy of the GNU General Public License along with ZLI
 
 namespace zlMeter {
     template<typename FloatType>
-    void SingleMeter<FloatType>::prepare(const juce::dsp::ProcessSpec &spec) {
-        sampleRate.store(static_cast<FloatType>(spec.sampleRate));
-        maxPeak.resize(static_cast<size_t>(spec.numChannels));
-        bufferPeak.resize(static_cast<size_t>(spec.numChannels));
-        tempPeak.resize(static_cast<size_t>(spec.numChannels));
+    void SingleMeter<FloatType>::reset() {
         for (size_t idx = 0; idx < maxPeak.size(); ++idx) {
-            maxPeak[idx].store(-120.f);
-            bufferPeak[idx].store(-120.f);
+            maxPeak[idx].store(-160.f);
+            bufferPeak[idx].store(-160.f);
         }
     }
 
     template<typename FloatType>
-    template<typename ProcessContext>
-    void SingleMeter<FloatType>::process(const ProcessContext &context) {
-        juce::dsp::AudioBlock<FloatType> outputBlock = context.getOutputBlock();
+    void SingleMeter<FloatType>::prepare(const juce::dsp::ProcessSpec &spec) {
+        sampleRate.store(static_cast<FloatType>(spec.sampleRate));
+        juce::ScopedLock lock(resizeLock);
+        maxPeak.resize(static_cast<size_t>(spec.numChannels));
+        bufferPeak.resize(static_cast<size_t>(spec.numChannels));
+        tempPeak.resize(static_cast<size_t>(spec.numChannels));
+        currentDecay.resize(static_cast<size_t>(spec.numChannels));
+        reset();
+    }
+
+    template<typename FloatType>
+    void SingleMeter<FloatType>::process(juce::dsp::AudioBlock<FloatType> block) {
+        auto outputBlock = block;
         if (!isON.load()) return;
         const auto decay = decayRate.load() * static_cast<FloatType>(outputBlock.getNumSamples()) / sampleRate.load();
 
@@ -43,7 +49,14 @@ namespace zlMeter {
 
         for (size_t channel = 0; channel < maxPeak.size(); ++channel) {
             tempPeak[channel] = juce::Decibels::gainToDecibels(tempPeak[channel]);
-            bufferPeak[channel].store(std::max(bufferPeak[channel].load() * decay, tempPeak[channel]));
+            const auto currentPeak = bufferPeak[channel].load() - currentDecay[channel];
+            if (currentPeak <= tempPeak[channel]) {
+                bufferPeak[channel].store(tempPeak[channel]);
+                currentDecay[channel] = 0;
+            } else {
+                bufferPeak[channel].store(currentPeak);
+                currentDecay[channel] += decay;
+            }
             maxPeak[channel].store(std::max(maxPeak[channel].load(), tempPeak[channel]));
         }
     }

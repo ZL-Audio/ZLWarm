@@ -37,9 +37,8 @@ namespace zlSplitter {
     }
 
     template<typename FloatType>
-    template<typename ProcessContext>
-    void IIRSplitter<FloatType>::split(const ProcessContext &context) {
-        auto inputBlock = context.getInputBlock();
+    void IIRSplitter<FloatType>::split(juce::dsp::AudioBlock<FloatType> block) {
+        auto inputBlock = block;
         auto lBlock = juce::dsp::AudioBlock<FloatType>(lBuffer);
         auto mBlock = juce::dsp::AudioBlock<FloatType>(mBuffer);
         auto hBlock = juce::dsp::AudioBlock<FloatType>(hBuffer);
@@ -63,9 +62,8 @@ namespace zlSplitter {
     }
 
     template<typename FloatType>
-    template<typename ProcessContext>
-    void IIRSplitter<FloatType>::combine(const ProcessContext &context) {
-        auto outputBlock = context.getOutputBlock();
+    void IIRSplitter<FloatType>::combine(juce::dsp::AudioBlock<FloatType> block) {
+        auto outputBlock = block;
 
         auto lBlock = juce::dsp::AudioBlock<FloatType>(lBuffer);
         auto mBlock = juce::dsp::AudioBlock<FloatType>(mBuffer);

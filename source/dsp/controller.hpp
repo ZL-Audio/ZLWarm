@@ -25,6 +25,8 @@ namespace zlDSP {
 
         void prepare(const juce::dsp::ProcessSpec &spec);
 
+        void reset();
+
         void process(juce::AudioBuffer<FloatType> &buffer);
 
         zlMeter::SingleMeter<FloatType> &getInMeter() { return inMeter; }
@@ -35,11 +37,6 @@ namespace zlDSP {
 
         zlWaveShaper::WarmInflator<FloatType> &getShaper() { return shaper; }
 
-        inline void setWet(const FloatType x) {
-            juce::ScopedLock lock(mixerLock);
-            mixer.setWetMixProportion(x);
-        }
-
         inline void setInGain(const FloatType x) {
             juce::ScopedLock lock(inGainLock);
             inGain.setGainDecibels(x);
@@ -49,24 +46,33 @@ namespace zlDSP {
             juce::ScopedLock lock(outGainLock);
             outGain.setGainDecibels(x);
         }
+
         void setOverSampleID(size_t idx);
+
+        inline void enableSplitter(const bool x) { isSplitterON.store(x); }
+
+        inline void enableShaper(const bool x) { isShaperON.store(x); }
+
+        inline int getLatency() {
+            juce::ScopedLock lock(oversampleLock);
+            return static_cast<int>(overSamplers[oversampleID]->getLatencyInSamples());
+        }
 
     private:
         zlMeter::SingleMeter<FloatType> inMeter, outMeter;
         zlSplitter::IIRSplitter<FloatType> splitter;
+        std::atomic<bool> isSplitterON;
         zlWaveShaper::WarmInflator<FloatType> shaper;
-
-        juce::dsp::DryWetMixer<FloatType> mixer;
-        juce::CriticalSection mixerLock;
+        std::atomic<bool> isShaperON;
 
         juce::dsp::Gain<FloatType> inGain, outGain;
         juce::CriticalSection inGainLock, outGainLock;
 
-        std::array<std::unique_ptr<juce::dsp::Oversampling<FloatType>>, 5> overSamplers{};
+        std::array<std::unique_ptr<juce::dsp::Oversampling<FloatType> >, 5> overSamplers{};
         std::array<int, 5> overSampleRate = {1, 2, 4, 8, 16};
-        size_t oversampleID {0};
+        size_t oversampleID{0};
         juce::CriticalSection oversampleLock;
-        juce::dsp::ProcessSpec spec;
+        juce::dsp::ProcessSpec mainSpec{44100, 512, 2};
     };
 } // zlDSP
 

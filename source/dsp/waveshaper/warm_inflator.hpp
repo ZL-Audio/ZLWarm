@@ -53,27 +53,25 @@ namespace zlWaveShaper {
 
         void prepare(const juce::dsp::ProcessSpec &spec);
 
-        template<typename ProcessContext>
-        void process(const ProcessContext &context);
+        void process(juce::dsp::AudioBlock<FloatType> block);
 
         void setCurve(FloatType x);
 
         void setWarm(FloatType x);
 
-        void enable(const bool x) { isON.store(x); }
+        void setWet(FloatType x);
 
     private:
         PositiveShaper pShaper;
         NegativeShaper nShaper;
-        FloatType warm;
-        std::atomic<bool> isON;
+        FloatType warm, wet{1};
 
         juce::CriticalSection paraUpdateLock;
 
         inline FloatType shape(FloatType x) {
             return (x > 0
                         ? pShaper.shape(std::abs(x))
-                        : warm * nShaper.shape(std::abs(x)) + (1 - warm) * pShaper.shape(std::abs(x)));
+                        : -warm * nShaper.shape(std::abs(x)) - (1 - warm) * pShaper.shape(std::abs(x)));
         }
     };
 } // zlWaveShaper

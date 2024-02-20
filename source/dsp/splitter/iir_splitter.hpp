@@ -32,17 +32,15 @@ namespace zlSplitter {
 
         /**
          * split the audio buffer into internal low, mid and high buffers
-         * @param context
+         * @param block
          */
-        template<typename ProcessContext>
-        void split(const ProcessContext &context);
+        void split(juce::dsp::AudioBlock<FloatType> block);
 
         /**
          * combine the internal low, mid and high buffers into the audio buffer
-         * @param context
+         * @param block
          */
-        template<typename ProcessContext>
-        void combine(const ProcessContext &context);
+        void combine(juce::dsp::AudioBlock<FloatType> block);
 
         void setLowFreq(FloatType freq);
 

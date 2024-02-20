@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 #include "../gui/gui.hpp"
 #include "control_panel.h"
 #include "top_panel.h"
-// #include "meter_panel.h"
+#include "meter_panel.h"
 #include "logo_panel.h"
 
 class MainPanel : public juce::Component {
@@ -34,7 +34,7 @@ private:
 
     ControlPanel controlPanel;
     TopPanel topPanel;
-    // MeterPanel meterPanel;
+    MeterPanel meterPanel;
     zlpanel::LogoPanel logoPanel;
 
 

@@ -16,11 +16,11 @@ MainPanel::MainPanel(PluginProcessor &p) :
         uiBase(),
         controlPanel(p.parameters, uiBase),
         topPanel(p, uiBase),
-        // meterPanel(input, output, uiBase),
+        meterPanel(p.getController(), uiBase),
         logoPanel(p, uiBase) {
     addAndMakeVisible(controlPanel);
     addAndMakeVisible(topPanel);
-    // addAndMakeVisible(meterPanel);
+    addAndMakeVisible(meterPanel);
     logoPanel.setJustification(juce::Justification::centredLeft);
     addAndMakeVisible(logoPanel);
 }
@@ -52,7 +52,7 @@ void MainPanel::resized() {
 
     grid.items = {
             juce::GridItem(logoPanel).withArea(1, 1, 2, 2),
-            // juce::GridItem(meterPanel).withArea(2, 1, 3, 2),
+            juce::GridItem(meterPanel).withArea(2, 1, 3, 2),
             juce::GridItem(topPanel).withArea(1, 2, 2, 3),
             juce::GridItem(controlPanel).withArea(2, 2, 3, 3),
     };

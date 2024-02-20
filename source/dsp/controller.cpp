@@ -35,12 +35,60 @@ namespace zlDSP {
                 overSamplers[i]->initProcessing(spec.maximumBlockSize);
             }
         }
+        mainSpec = spec;
         setOverSampleID(0);
     }
 
     template<typename FloatType>
-    void Controller<FloatType>::process(juce::AudioBuffer<FloatType> &buffer) {
+    void Controller<FloatType>::reset() {
+        // inGain.reset();
+        // outGain.reset();
+        // mixer.reset();
+        // splitter.reset();
+        // for (size_t i = 0; i < overSamplers.size(); ++i) {
+        //     overSamplers[i].reset();
+        // }
+    }
 
+    template<typename FloatType>
+    void Controller<FloatType>::process(juce::AudioBuffer<FloatType> &buffer) {
+        juce::dsp::AudioBlock<FloatType> block(buffer);
+        juce::dsp::ProcessContextReplacing<FloatType> context(block);
+        {
+            inGain.process(context);
+        }
+        inMeter.process(block);
+        {
+            juce::ScopedLock lock1(oversampleLock);
+            auto oversampled_block =
+                   overSamplers[oversampleID]->processSamplesUp(context.getInputBlock());
+
+            if (isSplitterON.load()) {
+                splitter.split(oversampled_block);
+
+                auto lBlock = juce::dsp::AudioBlock<FloatType>(splitter.getLBuffer());
+                auto mBlock = juce::dsp::AudioBlock<FloatType>(splitter.getMBuffer());
+                auto hBlock = juce::dsp::AudioBlock<FloatType>(splitter.getHBuffer());
+
+                if (isShaperON.load()) {
+                    shaper.process(lBlock);
+                    shaper.process(mBlock);
+                    shaper.process(hBlock);
+                }
+
+                splitter.combine(oversampled_block);
+            } else {
+                if (isShaperON.load()) {
+                    shaper.process(oversampled_block);
+                }
+            }
+            overSamplers[oversampleID]->processSamplesDown(block);
+        }
+        {
+            juce::ScopedLock lock(outGainLock);
+            outGain.process(context);
+        }
+        outMeter.process(block);
     }
 
     template<typename FloatType>
@@ -48,12 +96,17 @@ namespace zlDSP {
         juce::ScopedLock lock(oversampleLock);
         oversampleID = idx;
         juce::dsp::ProcessSpec overSampleSpec{
-            spec.sampleRate * static_cast<double>(overSampleRate[idx]),
-            spec.maximumBlockSize * static_cast<juce::uint32>(overSampleRate[idx]),
-            spec.numChannels
+            mainSpec.sampleRate * static_cast<double>(overSampleRate[idx]),
+            mainSpec.maximumBlockSize * static_cast<juce::uint32>(overSampleRate[idx]),
+            mainSpec.numChannels
         };
         shaper.prepare(overSampleSpec);
         splitter.prepare(overSampleSpec);
-        mixer.prepare(overSampleSpec);
     }
+
+    template
+    class Controller<float>;
+
+    template
+    class Controller<double>;
 } // zlDSP
