@@ -6,8 +6,8 @@ LICENSE and CODE are available at [https://github.com/ZL-Audio/ZLWarm](https://g
 
 ## 0.2.1
 
-- adjust meter UI
-- fix minor bugs
+- improve stability
+- adjust UI
 
 ## 0.2.0
 

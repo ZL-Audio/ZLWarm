@@ -55,6 +55,7 @@ namespace zlDSP {
         juce::dsp::AudioBlock<FloatType> block(buffer);
         juce::dsp::ProcessContextReplacing<FloatType> context(block);
         {
+            juce::ScopedLock lock(inGainLock);
             inGain.process(context);
         }
         inMeter.process(block);

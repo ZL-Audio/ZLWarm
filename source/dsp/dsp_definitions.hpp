@@ -123,11 +123,11 @@ namespace zlDSP {
         }
     };
 
-    class effectIn : public BoolParameters<effectIn> {
+    class effectOff : public BoolParameters<effectOff> {
     public:
-        auto static constexpr ID = "effect_in";
-        auto static constexpr name = "Effect In";
-        auto static constexpr defaultV = true;
+        auto static constexpr ID = "by_pass";
+        auto static constexpr name = "By Pass";
+        auto static constexpr defaultV = false;
     };
 
     class bandSplit : public BoolParameters<bandSplit> {
@@ -167,7 +167,7 @@ namespace zlDSP {
         layout.add(inputGain::get(), outputGain::get(), wet::get(),
                    warm::get(), curve::get(),
                    lowSplit::get(), highSplit::get(),
-                   effectIn::get(), bandSplit::get(), overSample::get());
+                   effectOff::get(), bandSplit::get(), overSample::get());
         return layout;
     }
 }

@@ -58,8 +58,8 @@ namespace zlDSP {
             controllerRef.getSplitter().setLowFreq(value);
         } else if (parameterID == highSplit::ID) {
             controllerRef.getSplitter().setHighFreq(value);
-        } else if (parameterID == effectIn::ID) {
-            controllerRef.enableShaper(static_cast<bool>(value));
+        } else if (parameterID == effectOff::ID) {
+            controllerRef.enableShaper(!static_cast<bool>(value));
         } else if (parameterID == bandSplit::ID) {
             controllerRef.enableSplitter(static_cast<bool>(value));
         } else if (parameterID == overSample::ID) {

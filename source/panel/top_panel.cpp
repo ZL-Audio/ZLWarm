@@ -32,7 +32,7 @@ TopPanel::TopPanel(PluginProcessor &p, zlInterface::UIBase &base)
     bypassC.setDrawable(bypassDrawable.get());
     bandSplitC.setDrawable(splitDrawable.get());
     zlPanel::attach({&bypassC.getButton(), &bandSplitC.getButton()},
-                    {zlDSP::effectIn::ID, zlDSP::bandSplit::ID},
+                    {zlDSP::effectOff::ID, zlDSP::bandSplit::ID},
                     p.parameters, buttonAttachments);
 
     nameLAF.setJustification(juce::Justification::centredRight);

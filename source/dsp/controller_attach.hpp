@@ -36,7 +36,7 @@ namespace zlDSP {
             inputGain::ID, outputGain::ID, wet::ID,
             warm::ID, curve::ID,
             lowSplit::ID, highSplit::ID,
-            effectIn::ID, bandSplit::ID, overSample::ID
+            effectOff::ID, bandSplit::ID, overSample::ID
         };
 
         inline static std::array defaultVs {
@@ -44,7 +44,7 @@ namespace zlDSP {
             static_cast<float>(wet::defaultV),
             static_cast<float>(warm::defaultV), static_cast<float>(curve::defaultV),
             static_cast<float>(lowSplit::defaultV), static_cast<float>(highSplit::defaultV),
-            static_cast<float>(effectIn::defaultV), static_cast<float>(bandSplit::defaultV),
+            static_cast<float>(effectOff::defaultV), static_cast<float>(bandSplit::defaultV),
             static_cast<float>(overSample::defaultI)
         };
 
