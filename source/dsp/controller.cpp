@@ -17,14 +17,8 @@ namespace zlDSP {
     void Controller<FloatType>::prepare(const juce::dsp::ProcessSpec &spec) {
         inMeter.prepare(spec);
         outMeter.prepare(spec);
-        {
-            juce::ScopedLock lock(inGainLock);
-            inGain.prepare(spec);
-        }
-        {
-            juce::ScopedLock lock(outGainLock);
-            outGain.prepare(spec);
-        }
+        inGain.prepare(spec);
+        outGain.prepare(spec);
         {
             juce::ScopedLock lock(oversampleLock);
             for (size_t i = 0; i < overSamplers.size(); ++i) {
@@ -41,23 +35,14 @@ namespace zlDSP {
 
     template<typename FloatType>
     void Controller<FloatType>::reset() {
-        // inGain.reset();
-        // outGain.reset();
-        // mixer.reset();
-        // splitter.reset();
-        // for (size_t i = 0; i < overSamplers.size(); ++i) {
-        //     overSamplers[i].reset();
-        // }
+
     }
 
     template<typename FloatType>
     void Controller<FloatType>::process(juce::AudioBuffer<FloatType> &buffer) {
         juce::dsp::AudioBlock<FloatType> block(buffer);
         juce::dsp::ProcessContextReplacing<FloatType> context(block);
-        {
-            juce::ScopedLock lock(inGainLock);
-            inGain.process(context);
-        }
+        inGain.process(block);
         inMeter.process(block);
         {
             juce::ScopedLock lock1(oversampleLock);
@@ -85,10 +70,7 @@ namespace zlDSP {
             }
             overSamplers[oversampleID]->processSamplesDown(block);
         }
-        {
-            juce::ScopedLock lock(outGainLock);
-            outGain.process(context);
-        }
+        outGain.process(block);
         outMeter.process(block);
     }
 

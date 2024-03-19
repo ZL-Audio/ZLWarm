@@ -28,7 +28,7 @@ MeterPanel::MeterPanel(zlDSP::Controller<float> &controller, zlInterface::UIBase
     outLabel.setLookAndFeel(&labelLAF);
     addAndMakeVisible(inLabel);
     addAndMakeVisible(outLabel);
-    startTimerHz(60);
+    startTimerHz(30);
 }
 
 MeterPanel::~MeterPanel() {

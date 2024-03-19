@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License along with ZLI
 #include "waveshaper/waveshaper.hpp"
 #include "meter/meter.hpp"
 #include "splitter/splitter.hpp"
+#include "gain/gain.hpp"
 
 namespace zlDSP {
     template<typename FloatType>
@@ -38,12 +39,10 @@ namespace zlDSP {
         zlWaveShaper::WarmInflator<FloatType> &getShaper() { return shaper; }
 
         inline void setInGain(const FloatType x) {
-            juce::ScopedLock lock(inGainLock);
             inGain.setGainDecibels(x);
         }
 
         inline void setOutGain(const FloatType x) {
-            juce::ScopedLock lock(outGainLock);
             outGain.setGainDecibels(x);
         }
 
@@ -62,8 +61,7 @@ namespace zlDSP {
         zlWaveShaper::WarmInflator<FloatType> shaper;
         std::atomic<bool> isShaperON;
 
-        juce::dsp::Gain<FloatType> inGain, outGain;
-        juce::CriticalSection inGainLock, outGainLock;
+        zlGain::Gain<FloatType> inGain{}, outGain{};
 
         std::array<std::unique_ptr<juce::dsp::Oversampling<FloatType> >, 5> overSamplers{};
         std::array<int, 5> overSampleRate = {1, 2, 4, 8, 16};
